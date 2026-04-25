@@ -132,32 +132,6 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
 .like-btn:hover{color:var(--gold)}
 .like-btn.liked{color:var(--gold)}
 
-/* PHOTOS */
-.photo-bg{background:var(--bg2);border-top:1px solid var(--border)}
-.photo-sub{font-size:1rem;color:var(--text-dim);margin-top:-1.8rem;margin-bottom:2rem}
-.upload-zone{border:1px dashed var(--border-md);border-radius:3px;padding:2.2rem 2rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:2rem;position:relative}
-.upload-zone:hover{border-color:var(--gold);background:rgba(192,154,80,.04)}
-.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.upload-icon{font-size:2.2rem;margin-bottom:.8rem;display:block}
-.upload-text{font-size:1rem;color:var(--text-mid);margin-bottom:.3rem}
-.upload-hint{font-size:.85rem;color:var(--text-dim)}
-.photo-empty{text-align:center;font-size:1rem;color:var(--text-dim);font-style:italic;padding:2rem 0}
-.carousel-wrap{position:relative;margin-bottom:1rem}
-.carousel-track-outer{overflow:hidden;border-radius:3px}
-.carousel-track{display:flex;transition:transform .45s cubic-bezier(.25,.46,.45,.94)}
-.carousel-slide{flex:0 0 100%;position:relative;background:var(--surface)}
-.carousel-slide img{width:100%;height:clamp(240px,55vw,520px);object-fit:contain;display:block;background:var(--bg)}
-.carousel-caption{position:absolute;bottom:0;left:0;right:0;padding:.8rem 1.2rem;background:linear-gradient(transparent,rgba(0,0,0,.7));font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(242,234,216,.7);text-align:center}
-.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(11,8,6,.7);border:1px solid var(--border);color:var(--gold-lt);width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:10;backdrop-filter:blur(6px)}
-.carousel-btn:hover{background:rgba(192,154,80,.15);border-color:var(--border-md)}
-.carousel-btn.prev{left:12px}
-.carousel-btn.next{right:12px}
-.carousel-btn:disabled{opacity:.25;cursor:not-allowed}
-.carousel-dots{display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap}
-.c-dot{width:7px;height:7px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);cursor:pointer;transition:all .2s}
-.c-dot.active{background:var(--gold);transform:scale(1.3)}
-.carousel-info{text-align:center;font-size:.85rem;color:var(--text-dim);margin-top:8px}
-
 /* INTEREST */
 .interest-bg{background:var(--bg4);border-top:1px solid var(--border)}
 .interest-inner{max-width:640px;margin:0 auto}
@@ -219,7 +193,6 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
   <a class="nav-link" href="#vinhos">Os vinhos</a>
   <a class="nav-link" href="#votacao">Votação</a>
   <a class="nav-link" href="#mensagens">Mensagens</a>
-  <a class="nav-link" href="#fotos">Fotos</a>
   <a class="nav-link gold" href="#interesse">Quero saber mais</a>
 </nav>
 
@@ -376,31 +349,6 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
 </div>
 </section>
 
-<!-- FOTOS -->
-<section id="fotos" class="photo-bg">
-<div class="sw">
-  <span class="section-label">Memórias da noite</span>
-  <h2 class="section-title">Fotos com os vinhos</h2>
-  <p class="photo-sub">Compartilhe o momento — as fotos aparecem para todos os convidados em tempo real.</p>
-  <div class="upload-zone">
-    <input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotos(this.files)">
-    <span class="upload-icon">📷</span>
-    <p class="upload-text">Toque aqui para adicionar fotos</p>
-    <p class="upload-hint">JPG, PNG — múltiplas fotos aceitas</p>
-  </div>
-  <p class="photo-empty" id="photoEmpty">Ainda não há fotos. Seja o primeiro a compartilhar!</p>
-  <div class="carousel-wrap" id="carouselWrap" style="display:none">
-    <div class="carousel-track-outer">
-      <div class="carousel-track" id="carouselTrack"></div>
-    </div>
-    <button class="carousel-btn prev" id="btnPrev" onclick="moveCarousel(-1)">&#8592;</button>
-    <button class="carousel-btn next" id="btnNext" onclick="moveCarousel(1)">&#8594;</button>
-    <div class="carousel-dots" id="carouselDots"></div>
-    <p class="carousel-info" id="carouselInfo"></p>
-  </div>
-</div>
-</section>
-
 <!-- INTERESSE -->
 <section id="interesse" class="interest-bg">
 <div class="sw">
@@ -452,8 +400,6 @@ import { getFirestore, doc, getDoc, setDoc, updateDoc, increment,
          collection, addDoc, onSnapshot, orderBy, query, serverTimestamp,
          updateDoc as fsUpdate }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL, listAll }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 /* ── Init ── */
 const app = initializeApp({
@@ -465,7 +411,6 @@ const app = initializeApp({
   appId: "1:451609971339:web:53dd984db5e1728c9ee28e"
 });
 const db  = getFirestore(app);
-const st  = getStorage(app);
 
 /* ── FILTER ── */
 document.querySelectorAll('.filter-btn').forEach(btn=>{
@@ -599,81 +544,6 @@ onSnapshot(query(msgsCol,orderBy('ts','desc')),snap=>{
   }).join('');
 });
 
-/* ── PHOTOS (Firebase Storage) ── */
-let photoUrls=[], carouselIndex=0;
-const fotosRef=ref(st,'fotos');
-
-async function loadPhotos(){
-  try{
-    const res=await listAll(fotosRef);
-    photoUrls=await Promise.all(res.items.map(item=>getDownloadURL(item)));
-    renderCarousel();
-  }catch(e){console.error(e);}
-}
-
-window.handlePhotos=async function(files){
-  const input=document.getElementById('photoInput');
-  const uploadText=document.querySelector('.upload-text');
-  uploadText.textContent='Enviando...';
-  for(const file of Array.from(files)){
-    if(!file.type.startsWith('image/'))continue;
-    const fileRef=ref(st,`fotos/${Date.now()}_${file.name}`);
-    try{
-      await uploadBytes(fileRef,file);
-      const url=await getDownloadURL(fileRef);
-      photoUrls.push(url);
-      renderCarousel();
-    }catch(e){console.error(e);}
-  }
-  uploadText.textContent='Adicionar mais fotos';
-  input.value='';
-};
-
-function renderCarousel(){
-  const empty=document.getElementById('photoEmpty');
-  const wrap=document.getElementById('carouselWrap');
-  if(photoUrls.length===0){empty.style.display='block';wrap.style.display='none';return;}
-  empty.style.display='none';wrap.style.display='block';
-  if(carouselIndex>=photoUrls.length)carouselIndex=photoUrls.length-1;
-  if(carouselIndex<0)carouselIndex=0;
-  const track=document.getElementById('carouselTrack');
-  track.innerHTML=photoUrls.map((url,i)=>`
-    <div class="carousel-slide">
-      <img src="${url}" alt="Foto ${i+1}" loading="lazy">
-      <div class="carousel-caption">✦ uma noite inesquecível · ${i+1} de ${photoUrls.length}</div>
-    </div>`).join('');
-  track.style.transform=`translateX(-${carouselIndex*100}%)`;
-  document.getElementById('carouselDots').innerHTML=photoUrls.map((_,i)=>`<div class="c-dot${i===carouselIndex?' active':''}" onclick="goToSlide(${i})"></div>`).join('');
-  document.getElementById('btnPrev').disabled=carouselIndex===0;
-  document.getElementById('btnNext').disabled=carouselIndex===photoUrls.length-1;
-  document.getElementById('carouselInfo').textContent=`${carouselIndex+1} / ${photoUrls.length}`;
-}
-
-window.moveCarousel=function(dir){carouselIndex=Math.max(0,Math.min(photoUrls.length-1,carouselIndex+dir));renderCarousel();};
-window.goToSlide=function(i){carouselIndex=i;renderCarousel();};
-
-// swipe
-(function(){
-  let sx=0;
-  document.addEventListener('touchstart',e=>{const t=e.target.closest('#carouselWrap');if(t)sx=e.touches[0].clientX;},{passive:true});
-  document.addEventListener('touchend',e=>{const t=e.target.closest('#carouselWrap');if(!t||!sx)return;const dx=sx-e.changedTouches[0].clientX;if(Math.abs(dx)>40)window.moveCarousel(dx>0?1:-1);sx=0;},{passive:true});
-  document.addEventListener('keydown',e=>{if(document.getElementById('carouselWrap').style.display==='none')return;if(e.key==='ArrowLeft')window.moveCarousel(-1);if(e.key==='ArrowRight')window.moveCarousel(1);});
-})();
-
-/* ── INTERESSE ── */
-window.sendInterest=async function(){
-  const email=document.getElementById('intEmail').value.trim();
-  const wine=document.getElementById('intWine').value;
-  if(!email||!wine){return;}
-  const btn=document.getElementById('intBtn');btn.disabled=true;
-  try{
-    await addDoc(collection(db,'eventos','isa-e-ricky','interesse'),{email,wine,ts:serverTimestamp()});
-    document.getElementById('interestForm').style.display='none';
-    document.getElementById('interestOk').style.display='block';
-  }catch(e){console.error(e);btn.disabled=false;}
-};
-
-loadPhotos();
 </script>
 </body>
 </html>
