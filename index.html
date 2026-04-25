@@ -9,14 +9,14 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0B0806;--bg2:#110E09;--bg3:#16120D;--bg4:#0E0B07;
-  --surface:#1E1610;--surface2:#271D13;
+  --surface:#221810;--surface2:#2D2015;
   --wine:#7B2335;--wine-lt:#A33347;
-  --gold:#C09A50;--gold-lt:#E2C07A;
-  --text:#F2EAD8;--text-mid:#C8B898;--text-dim:#7A6A52;
-  --border:rgba(192,154,80,0.18);--border-md:rgba(192,154,80,0.35);
+  --gold:#C09A50;--gold-lt:#E8C87A;
+  --text:#F5EDE0;--text-mid:#D8C4A8;--text-dim:#A08870;
+  --border:rgba(192,154,80,0.22);--border-md:rgba(192,154,80,0.42);
 }
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Jost',sans-serif;font-weight:300;font-size:17px;line-height:1.75}
+body{background:var(--bg);color:var(--text);font-family:'Jost',sans-serif;font-weight:300;font-size:18px;line-height:1.8}
 
 /* HERO */
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:5rem 1.5rem 4rem;background:radial-gradient(ellipse 95% 65% at 50% 20%,rgba(123,35,53,0.55) 0%,transparent 65%),var(--bg)}
@@ -63,12 +63,12 @@ body{background:var(--bg);color:var(--text);font-family:'Jost',sans-serif;font-w
 .b-tinto{background:rgba(163,45,45,.2);color:#E07070;border:1px solid rgba(163,45,45,.3)}
 .b-tawny{background:rgba(133,79,11,.2);color:#E0AA55;border:1px solid rgba(133,79,11,.3)}
 .b-sobremesa{background:rgba(60,52,137,.2);color:#9990E8;border:1px solid rgba(60,52,137,.3)}
-.card-name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;color:var(--text);line-height:1.2;margin-bottom:.3rem}
-.card-producer{font-size:.95rem;color:var(--text-dim);font-style:italic;margin-bottom:1.3rem}
+.card-name{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--text);line-height:1.2;margin-bottom:.3rem}
+.card-producer{font-size:1rem;color:var(--text-dim);font-style:italic;margin-bottom:1.3rem}
 .card-divider{height:1px;background:var(--border);margin-bottom:1.2rem}
 .card-row{display:grid;grid-template-columns:82px 1fr;gap:.25rem .8rem;margin-bottom:.75rem;align-items:baseline}
-.row-label{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim)}
-.row-value{font-size:1rem;color:var(--text-mid);line-height:1.6}
+.row-label{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim)}
+.row-value{font-size:1.05rem;color:var(--text-mid);line-height:1.6}
 .row-value.perfil{font-style:italic;color:var(--gold-lt)}
 
 /* VOTE */
@@ -83,8 +83,8 @@ body{background:var(--bg);color:var(--text);font-family:'Jost',sans-serif;font-w
 .v-chk{display:none;position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;background:var(--gold);align-items:center;justify-content:center}
 .v-chk svg{width:11px;height:11px}
 .v-badge{display:inline-block;font-size:.75rem;font-weight:500;padding:3px 8px;border-radius:2px;margin-bottom:8px}
-.v-name{font-size:1rem;font-weight:500;color:var(--text);line-height:1.35;margin-bottom:2px}
-.v-prod{font-size:.84rem;color:var(--text-dim);font-style:italic}
+.v-name{font-size:1.05rem;font-weight:500;color:var(--text);line-height:1.35;margin-bottom:2px}
+.v-prod{font-size:.88rem;color:var(--text-dim);font-style:italic}
 .vote-actions{display:flex;gap:1rem;align-items:center;margin-bottom:.8rem;flex-wrap:wrap}
 .btn-gold{font-family:'Jost',sans-serif;font-size:.9rem;letter-spacing:.15em;text-transform:uppercase;padding:.78rem 2.2rem;background:var(--gold);border:none;color:var(--bg);cursor:pointer;border-radius:2px;font-weight:500;transition:opacity .2s}
 .btn-gold:disabled{opacity:.35;cursor:not-allowed}
@@ -125,9 +125,9 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
 .msg-card{background:var(--surface);border:1px solid var(--border);padding:1.5rem 1.7rem;margin-bottom:2px;position:relative;transition:border-color .2s}
 .msg-card:hover{border-color:var(--border-md)}
 .msg-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.6rem}
-.msg-author{font-weight:500;font-size:1rem;color:var(--text)}
-.msg-time{font-size:.82rem;color:var(--text-dim)}
-.msg-text{font-size:1rem;color:var(--text-mid);line-height:1.75;padding-right:3rem}
+.msg-author{font-weight:500;font-size:1.05rem;color:var(--text)}
+.msg-time{font-size:.85rem;color:var(--text-dim)}
+.msg-text{font-size:1.05rem;color:var(--text-mid);line-height:1.8;padding-right:3rem}
 .like-btn{position:absolute;bottom:1rem;right:1.2rem;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;color:var(--text-dim);font-size:1rem;font-family:'Jost',sans-serif;transition:color .2s;padding:6px}
 .like-btn:hover{color:var(--gold)}
 .like-btn.liked{color:var(--gold)}
@@ -397,11 +397,10 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, increment,
-         collection, addDoc, onSnapshot, orderBy, query, serverTimestamp,
+         collection, addDoc, getDocs, orderBy, query, serverTimestamp,
          updateDoc as fsUpdate }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* ── Init ── */
 const app = initializeApp({
   apiKey: "AIzaSyB7Qmtzi02k-MDdPqBlWWt1i9agmj6jJ6Q",
   authDomain: "isa-e-ricky.firebaseapp.com",
@@ -410,7 +409,7 @@ const app = initializeApp({
   messagingSenderId: "451609971339",
   appId: "1:451609971339:web:53dd984db5e1728c9ee28e"
 });
-const db  = getFirestore(app);
+const db = getFirestore(app);
 
 /* ── FILTER ── */
 document.querySelectorAll('.filter-btn').forEach(btn=>{
@@ -428,7 +427,7 @@ document.querySelectorAll('.filter-btn').forEach(btn=>{
 const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-/* ── WINES list ── */
+/* ── WINES ── */
 const WINES=[
   {id:'chablis',   name:'Chablis Denis Race',                      badge:'b-branco',    label:'Branco'},
   {id:'rose',      name:'Rosé de Provence Rollier',                badge:'b-rose',      label:'Rosé'},
@@ -444,12 +443,12 @@ const WINES=[
 
 /* ── VOTE CARDS ── */
 const MAX=3;
-let selected=new Set(),voted=false,votes={};
+let selected=new Set(), voted=false, votes={};
 WINES.forEach(w=>votes[w.id]=0);
 const vGrid=document.getElementById('vGrid');
 WINES.forEach(w=>{
   const el=document.createElement('div');
-  el.className='v-card';el.dataset.id=w.id;
+  el.className='v-card'; el.dataset.id=w.id;
   el.innerHTML=`<div class="v-chk"><svg viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#0B0806" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
   <span class="v-badge ${w.badge}">${w.label}</span><div class="v-name">${w.name}</div>`;
   el.addEventListener('click',()=>toggleWine(w.id,el));
@@ -471,21 +470,28 @@ window.submitVote=async function(){
   voted=true;
   document.getElementById('voteBtn').disabled=true;
   const vRef=doc(db,'eventos','isa-e-ricky','votacao','resultado');
-  const upd={};selected.forEach(id=>{upd[id]=increment(1);});
   try{
-    const snap=await getDoc(vRef);
-    if(snap.exists()){await updateDoc(vRef,upd);}
-    else{await setDoc(vRef,Object.fromEntries(WINES.map(w=>[w.id,0])));await updateDoc(vRef,upd);}
-  }catch(e){console.error(e);}
-  document.querySelectorAll('.v-card').forEach(c=>{c.classList.add('disabled');c.style.cursor='default';});
-  document.getElementById('vOk').style.display='block';
+    await setDoc(vRef, Object.fromEntries(WINES.map(w=>[w.id,0])), {merge:true});
+    const upd={};
+    selected.forEach(id=>{upd[id]=increment(1);});
+    await updateDoc(vRef, upd);
+    document.querySelectorAll('.v-card').forEach(c=>{c.classList.add('disabled');c.style.cursor='default';});
+    document.getElementById('vOk').style.display='block';
+    await loadVotes();
+  }catch(e){
+    console.error('Erro ao votar:',e);
+    voted=false;
+    document.getElementById('voteBtn').disabled=false;
+  }
 };
 
-const voteRef=doc(db,'eventos','isa-e-ricky','votacao','resultado');
-onSnapshot(voteRef,snap=>{
-  if(snap.exists())votes={...Object.fromEntries(WINES.map(w=>[w.id,0])),...snap.data()};
-  renderResults();
-});
+async function loadVotes(){
+  try{
+    const snap=await getDoc(doc(db,'eventos','isa-e-ricky','votacao','resultado'));
+    if(snap.exists()) votes={...Object.fromEntries(WINES.map(w=>[w.id,0])),...snap.data()};
+    renderResults();
+  }catch(e){console.error('Erro votos:',e);}
+}
 
 function renderResults(){
   const total=Object.values(votes).reduce((a,b)=>a+b,0);
@@ -501,6 +507,7 @@ function renderResults(){
 
 /* ── MESSAGES ── */
 window.updateChar=function(){document.getElementById('charCount').textContent=document.getElementById('msgText').value.length};
+
 function timeAgo(ts){
   if(!ts)return'agora mesmo';
   const d=Math.floor((Date.now()-ts.toMillis())/1000);
@@ -508,7 +515,25 @@ function timeAgo(ts){
   if(d<86400)return`há ${Math.floor(d/3600)}h`;return`há ${Math.floor(d/86400)}d`;
 }
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
 const msgsCol=collection(db,'eventos','isa-e-ricky','mensagens');
+
+async function loadMessages(){
+  try{
+    const snap=await getDocs(query(msgsCol,orderBy('ts','desc')));
+    const area=document.getElementById('muralArea');
+    document.getElementById('muralCount').textContent=`${snap.size} mensage${snap.size!==1?'ns':'m'}`;
+    if(snap.empty){area.innerHTML='<p class="mural-empty">Ainda não há mensagens. Seja o primeiro a escrever!</p>';return;}
+    area.innerHTML=snap.docs.map(d=>{
+      const m={...d.data(),id:d.id};
+      return `<div class="msg-card">
+        <div class="msg-top"><span class="msg-author">${esc(m.name)}</span><span class="msg-time">${timeAgo(m.ts)}</span></div>
+        <p class="msg-text">${esc(m.text)}</p>
+        <button class="like-btn${m.likes>0?' liked':''}" onclick="likeMsg('${m.id}')">♡ ${m.likes>0?m.likes:''}</button>
+      </div>`;
+    }).join('');
+  }catch(e){console.error('Erro mensagens:',e);}
+}
 
 window.sendMsg=async function(){
   const name=document.getElementById('msgName').value.trim();
@@ -522,28 +547,39 @@ window.sendMsg=async function(){
     document.getElementById('charCount').textContent='0';
     const ok=document.getElementById('msgOk');ok.style.display='inline';
     setTimeout(()=>ok.style.display='none',3000);
-  }catch(e){console.error(e);}
+    await loadMessages();
+  }catch(e){console.error('Erro ao enviar:',e);}
   btn.disabled=false;
 };
 
 window.likeMsg=async function(id){
-  try{await fsUpdate(doc(db,'eventos','isa-e-ricky','mensagens',id),{likes:increment(1)});}catch(e){}
+  try{
+    await fsUpdate(doc(db,'eventos','isa-e-ricky','mensagens',id),{likes:increment(1)});
+    await loadMessages();
+  }catch(e){console.error(e);}
 };
 
-onSnapshot(query(msgsCol,orderBy('ts','desc')),snap=>{
-  const area=document.getElementById('muralArea');
-  document.getElementById('muralCount').textContent=`${snap.size} mensage${snap.size!==1?'ns':'m'}`;
-  if(snap.empty){area.innerHTML='<p class="mural-empty">Ainda não há mensagens. Seja o primeiro a escrever!</p>';return;}
-  area.innerHTML=snap.docs.map(d=>{
-    const m={...d.data(),id:d.id};
-    return `<div class="msg-card">
-      <div class="msg-top"><span class="msg-author">${esc(m.name)}</span><span class="msg-time">${timeAgo(m.ts)}</span></div>
-      <p class="msg-text">${esc(m.text)}</p>
-      <button class="like-btn${m.likes>0?' liked':''}" onclick="likeMsg('${m.id}')">♡ ${m.likes>0?m.likes:''}</button>
-    </div>`;
-  }).join('');
-});
+/* ── INTERESSE ── */
+window.sendInterest=async function(){
+  const email=document.getElementById('intEmail').value.trim();
+  const wine=document.getElementById('intWine').value;
+  if(!email||!wine)return;
+  const btn=document.getElementById('intBtn');btn.disabled=true;
+  try{
+    await addDoc(collection(db,'eventos','isa-e-ricky','interesse'),{email,wine,ts:serverTimestamp()});
+    document.getElementById('interestForm').style.display='none';
+    document.getElementById('interestOk').style.display='block';
+  }catch(e){
+    console.error('Erro interesse:',e);
+    btn.disabled=false;
+  }
+};
 
+/* ── INIT — carrega dados ao abrir ── */
+loadVotes();
+loadMessages();
+// Atualiza a cada 20s para quem está com o site aberto
+setInterval(()=>{loadVotes();loadMessages();},20000);
 </script>
 </body>
 </html>
