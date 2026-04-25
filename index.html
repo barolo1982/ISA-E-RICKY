@@ -142,18 +142,31 @@ textarea.form-input{resize:vertical;min-height:100px;line-height:1.7}
 /* PHOTOS */
 .photo-bg{background:var(--bg2);border-top:1px solid var(--border)}
 .photo-sub{font-size:1rem;color:var(--text-dim);margin-top:-1.8rem;margin-bottom:2rem}
-.upload-zone{border:1px dashed var(--border-md);border-radius:3px;padding:2.5rem 2rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:2rem;position:relative}
+.upload-zone{border:1px dashed var(--border-md);border-radius:3px;padding:2.2rem 2rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:2.5rem;position:relative}
 .upload-zone:hover{border-color:var(--gold);background:rgba(192,154,80,.04)}
 .upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .upload-icon{font-size:2.2rem;margin-bottom:.8rem;display:block}
 .upload-text{font-size:1rem;color:var(--text-mid);margin-bottom:.3rem}
 .upload-hint{font-size:.85rem;color:var(--text-dim)}
-.photo-wall{display:flex;flex-wrap:wrap;gap:16px;justify-content:flex-start}
-.polaroid{background:#1a1510;padding:10px 10px 36px;border:1px solid var(--border);box-shadow:0 8px 32px rgba(0,0,0,.6);position:relative;transition:transform .3s ease,box-shadow .3s ease;flex-shrink:0}
-.polaroid:hover{box-shadow:0 16px 48px rgba(0,0,0,.8)}
-.polaroid img{display:block;width:180px;height:180px;object-fit:cover}
-.polaroid-caption{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.88rem;color:var(--text-dim);padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.photo-empty{text-align:center;font-size:1rem;color:var(--text-dim);font-style:italic;padding:2rem 0}
+.photo-counter{font-size:.82rem;color:var(--gold);margin-top:.6rem;display:none}
+
+/* CAROUSEL */
+.carousel-wrap{position:relative;margin-bottom:1rem}
+.carousel-track-outer{overflow:hidden;border-radius:3px}
+.carousel-track{display:flex;transition:transform .45s cubic-bezier(.25,.46,.45,.94)}
+.carousel-slide{flex:0 0 100%;position:relative;background:var(--surface)}
+.carousel-slide img{width:100%;height:clamp(240px,55vw,520px);object-fit:contain;display:block;background:var(--bg)}
+.carousel-caption{position:absolute;bottom:0;left:0;right:0;padding:.8rem 1.2rem;background:linear-gradient(transparent,rgba(0,0,0,.7));font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(242,234,216,.7);text-align:center}
+.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(11,8,6,.7);border:1px solid var(--border);color:var(--gold-lt);width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s;z-index:10;backdrop-filter:blur(6px)}
+.carousel-btn:hover{background:rgba(192,154,80,.15);border-color:var(--border-md)}
+.carousel-btn.prev{left:12px}
+.carousel-btn.next{right:12px}
+.carousel-btn:disabled{opacity:.25;cursor:not-allowed}
+.carousel-dots{display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.c-dot{width:7px;height:7px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);cursor:pointer;transition:background .2s,transform .2s}
+.c-dot.active{background:var(--gold);transform:scale(1.25)}
+.carousel-info{text-align:center;font-size:.85rem;color:var(--text-dim);margin-top:8px}
+.photo-empty{text-align:center;font-size:1rem;color:var(--text-dim);font-style:italic;padding:2.5rem 0}
 
 /* FOOTER */
 footer{background:var(--bg);border-top:1px solid var(--border);text-align:center;padding:3rem 2rem}
@@ -405,11 +418,20 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
   <div class="upload-zone" id="uploadZone">
     <input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotos(this.files)">
     <span class="upload-icon">📷</span>
-    <p class="upload-text">Toque aqui para escolher fotos</p>
+    <p class="upload-text">Toque aqui para adicionar fotos</p>
     <p class="upload-hint">JPG, PNG — múltiplas fotos aceitas</p>
+    <p class="photo-counter" id="photoCounter"></p>
   </div>
-  <div class="photo-wall" id="photoWall"></div>
   <p class="photo-empty" id="photoEmpty">Ainda não há fotos. Seja o primeiro a compartilhar!</p>
+  <div class="carousel-wrap" id="carouselWrap" style="display:none">
+    <div class="carousel-track-outer">
+      <div class="carousel-track" id="carouselTrack"></div>
+    </div>
+    <button class="carousel-btn prev" id="btnPrev" onclick="moveCarousel(-1)">&#8592;</button>
+    <button class="carousel-btn next" id="btnNext" onclick="moveCarousel(1)">&#8594;</button>
+    <div class="carousel-dots" id="carouselDots"></div>
+    <p class="carousel-info" id="carouselInfo"></p>
+  </div>
 </div>
 </section>
 
@@ -453,7 +475,7 @@ const WINES=[
 ];
 
 const MAX=3;
-let selected=new Set(),voted=false,votes={},messages=[],photos=[];
+let selected=new Set(),voted=false,votes={},messages=[];
 WINES.forEach(w=>votes[w.id]=0);
 
 const vGrid=document.getElementById('vGrid');
@@ -542,36 +564,96 @@ function renderMural(){
     </div>`).join('');
 }
 
-/* PHOTOS */
-const ROTATIONS=[-3,-1.5,0,1.5,3,2,-2];
+/* PHOTOS + CAROUSEL */
+let photos=[];
+let carouselIndex=0;
+
 function handlePhotos(files){
   Array.from(files).forEach(file=>{
     if(!file.type.startsWith('image/'))return;
     const reader=new FileReader();
     reader.onload=e=>{
-      const rot=ROTATIONS[photos.length%ROTATIONS.length];
-      photos.push({src:e.target.result,rot,ts:Date.now()});
-      renderPhotos();
-      try{
-        const slim=photos.map(p=>({src:p.src.substring(0,200),rot:p.rot,ts:p.ts}));
-        window.storage.set('wedding_photos_v3',JSON.stringify(slim),true).catch(()=>{});
-      }catch(ex){}
+      photos.push({src:e.target.result,ts:Date.now()});
+      renderCarousel();
     };
     reader.readAsDataURL(file);
   });
+  // reset input so same files can be added again
+  document.getElementById('photoInput').value='';
 }
 
-function renderPhotos(){
-  const wall=document.getElementById('photoWall');
+function renderCarousel(){
   const empty=document.getElementById('photoEmpty');
-  if(photos.length===0){wall.innerHTML='';empty.style.display='block';return;}
+  const wrap=document.getElementById('carouselWrap');
+  const counter=document.getElementById('photoCounter');
+
+  if(photos.length===0){
+    empty.style.display='block';
+    wrap.style.display='none';
+    counter.style.display='none';
+    return;
+  }
+
   empty.style.display='none';
-  wall.innerHTML=photos.map((p,i)=>`
-    <div class="polaroid" style="transform:rotate(${p.rot}deg);transition:transform .3s ease" onmouseover="this.style.transform='rotate(0deg) scale(1.06)'" onmouseout="this.style.transform='rotate(${p.rot}deg)'">
-      <img src="${p.src}" alt="Foto ${i+1}">
-      <div class="polaroid-caption">✦ uma noite inesquecível</div>
+  wrap.style.display='block';
+  counter.style.display='block';
+  counter.textContent=`${photos.length} foto${photos.length!==1?'s':''} adicionada${photos.length!==1?'s':''}`;
+
+  // clamp index
+  if(carouselIndex>=photos.length)carouselIndex=photos.length-1;
+  if(carouselIndex<0)carouselIndex=0;
+
+  // slides
+  const track=document.getElementById('carouselTrack');
+  track.innerHTML=photos.map((p,i)=>`
+    <div class="carousel-slide">
+      <img src="${p.src}" alt="Foto ${i+1}" loading="lazy">
+      <div class="carousel-caption">✦ uma noite inesquecível · foto ${i+1} de ${photos.length}</div>
     </div>`).join('');
+  track.style.transform=`translateX(-${carouselIndex*100}%)`;
+
+  // dots
+  const dots=document.getElementById('carouselDots');
+  dots.innerHTML=photos.map((_,i)=>`<div class="c-dot${i===carouselIndex?' active':''}" onclick="goToSlide(${i})"></div>`).join('');
+
+  // buttons
+  document.getElementById('btnPrev').disabled=carouselIndex===0;
+  document.getElementById('btnNext').disabled=carouselIndex===photos.length-1;
+  document.getElementById('carouselInfo').textContent=`${carouselIndex+1} / ${photos.length}`;
 }
+
+function moveCarousel(dir){
+  carouselIndex=Math.max(0,Math.min(photos.length-1,carouselIndex+dir));
+  renderCarousel();
+}
+
+function goToSlide(i){
+  carouselIndex=i;
+  renderCarousel();
+}
+
+// touch/swipe support
+(function(){
+  let startX=0;
+  document.addEventListener('touchstart',e=>{
+    const t=e.target.closest('#carouselWrap');
+    if(t)startX=e.touches[0].clientX;
+  },{passive:true});
+  document.addEventListener('touchend',e=>{
+    const t=e.target.closest('#carouselWrap');
+    if(!t||!startX)return;
+    const dx=startX-e.changedTouches[0].clientX;
+    if(Math.abs(dx)>40){moveCarousel(dx>0?1:-1);}
+    startX=0;
+  },{passive:true});
+
+  // keyboard arrows
+  document.addEventListener('keydown',e=>{
+    if(document.getElementById('carouselWrap').style.display==='none')return;
+    if(e.key==='ArrowLeft')moveCarousel(-1);
+    if(e.key==='ArrowRight')moveCarousel(1);
+  });
+})()
 
 /* LOAD */
 async function loadAll(){
@@ -579,7 +661,7 @@ async function loadAll(){
   try{const r=await window.storage.get('wedding_msgs_v3',true);if(r&&r.value)messages=JSON.parse(r.value);}catch(e){}
   renderResults();
   renderMural();
-  renderPhotos();
+  renderCarousel();
 }
 loadAll();
 </script>
