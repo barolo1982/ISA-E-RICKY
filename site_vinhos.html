@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caderno de Vinhos — Evento</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream:     #F7F2EA;
+  --parchment: #EDE6D8;
+  --dark:      #1C110A;
+  --wine:      #6B1E2A;
+  --wine-mid:  #9B3A2A;
+  --gold:      #C09A50;
+  --gold-lt:   #E8C97A;
+  --text:      #2E1F14;
+  --muted:     #8A7060;
+  --border:    #D6C9B4;
+  --white:     #FFFFFF;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  color: var(--text);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+/* ── HERO ──────────────────────────────────────────────────────── */
+.hero {
+  background: var(--dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding: 4rem 2rem;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(107,30,42,0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 20% 80%, rgba(192,154,80,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-ornament {
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp 1s 0.2s forwards;
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.2rem, 9vw, 7rem);
+  font-weight: 300;
+  color: #F5EFE5;
+  line-height: 1.05;
+  opacity: 0;
+  animation: fadeUp 1s 0.4s forwards;
+  position: relative;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold-lt);
+}
+
+.hero-line {
+  width: 60px;
+  height: 1px;
+  background: var(--gold);
+  margin: 2.5rem auto;
+  opacity: 0;
+  animation: scaleIn 0.8s 0.8s forwards;
+}
+
+.hero-sub {
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+  color: var(--muted);
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 1s 1s forwards;
+}
+
+.hero-countries {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 3rem;
+  opacity: 0;
+  animation: fadeUp 1s 1.2s forwards;
+}
+
+.country-chip {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: rgba(245,239,229,0.5);
+  border: 1px solid rgba(192,154,80,0.2);
+  padding: 0.35rem 0.85rem;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(245,239,229,0.3);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 1s 1.6s forwards;
+}
+
+.scroll-arrow {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(to bottom, rgba(192,154,80,0.6), transparent);
+  animation: scrollPulse 2s 2s infinite;
+}
+
+/* ── NAV ──────────────────────────────────────────────────────── */
+.sticky-nav {
+  background: var(--dark);
+  padding: 1rem 2rem;
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(192,154,80,0.15);
+}
+
+.nav-link {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.4rem 1rem;
+  border: 1px solid rgba(192,154,80,0.25);
+  background: transparent;
+  color: rgba(245,239,229,0.5);
+  cursor: pointer;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-block;
+}
+
+.nav-link:hover {
+  background: rgba(192,154,80,0.15);
+  color: var(--gold-lt);
+  border-color: rgba(192,154,80,0.5);
+}
+
+.nav-link.gold {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--dark);
+}
+
+/* ── SECTIONS ──────────────────────────────────────────────────── */
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 5rem 2rem;
+}
+
+.section-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 300;
+  color: var(--dark);
+  margin-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── FILTER ──────────────────────────────────────────────────── */
+.filter-row {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+.filter-btn {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: var(--wine-mid);
+  border-color: var(--wine-mid);
+  color: #fff;
+}
+
+/* ── WINE GRID ──────────────────────────────────────────────── */
+.wine-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 2px;
+}
+
+.wine-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.3s ease;
+}
+
+.wine-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 0;
+  background: var(--card-accent, var(--wine));
+  transition: height 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+
+.wine-card:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(28,17,10,0.1); }
+.wine-card:hover::before { height: 100%; }
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.2rem;
+}
+
+.card-flag { font-size: 1.3rem; line-height: 1; }
+
+.card-badge {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.7rem;
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+.badge-branco    { background: #EAF3DE; color: #3B6D11; }
+.badge-rose      { background: #FBEAF0; color: #993556; }
+.badge-tinto     { background: #FCEBEB; color: #A32D2D; }
+.badge-tawny     { background: #FAEEDA; color: #854F0B; }
+.badge-sobremesa { background: #EEEDFE; color: #3C3489; }
+
+.card-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--dark);
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+
+.card-producer {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 1.3rem;
+}
+
+.card-divider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 1.2rem;
+}
+
+.card-row {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 0.25rem 0.8rem;
+  margin-bottom: 0.65rem;
+  align-items: baseline;
+}
+
+.row-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.row-value {
+  font-size: 0.83rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.row-value.perfil {
+  font-style: italic;
+  color: var(--wine-mid);
+}
+
+/* ── VOTING SECTION ─────────────────────────────────────────── */
+.vote-section {
+  background: var(--dark);
+  padding: 5rem 2rem;
+}
+
+.vote-inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.vote-section .section-label { color: var(--gold); }
+.vote-section .section-title {
+  color: #F5EFE5;
+  border-bottom-color: rgba(192,154,80,0.2);
+}
+
+.vote-sub {
+  font-size: 0.85rem;
+  color: rgba(245,239,229,0.5);
+  margin-bottom: 2rem;
+  margin-top: -1.5rem;
+}
+
+.v-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.v-card {
+  background: rgba(255,255,255,0.05);
+  border: 0.5px solid rgba(192,154,80,0.2);
+  border-radius: 4px;
+  padding: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+  user-select: none;
+}
+
+.v-card:hover { border-color: rgba(192,154,80,0.5); background: rgba(255,255,255,0.08); }
+.v-card.selected { border: 1.5px solid var(--gold); background: rgba(192,154,80,0.1); }
+.v-card.disabled { opacity: 0.35; cursor: not-allowed; }
+.v-card.selected .v-check { display: flex; }
+
+.v-check {
+  display: none;
+  position: absolute;
+  top: 9px; right: 9px;
+  width: 17px; height: 17px;
+  border-radius: 50%;
+  background: var(--gold);
+  align-items: center;
+  justify-content: center;
+}
+
+.v-check svg { width: 9px; height: 9px; }
+
+.v-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 2px;
+  margin-bottom: 6px;
+}
+
+.v-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #F5EFE5;
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+
+.v-prod {
+  font-size: 11px;
+  color: rgba(245,239,229,0.4);
+  font-style: italic;
+}
+
+.vote-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.btn-gold {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.65rem 1.8rem;
+  background: var(--gold);
+  border: none;
+  color: var(--dark);
+  cursor: pointer;
+  border-radius: 2px;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.btn-gold:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-gold:not(:disabled):hover { opacity: 0.85; }
+
+.vote-clabel {
+  font-size: 0.78rem;
+  color: rgba(245,239,229,0.4);
+  letter-spacing: 0.05em;
+}
+
+.vote-success {
+  font-size: 0.8rem;
+  color: var(--gold-lt);
+  display: none;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.1em;
+}
+
+/* results */
+.results-box {
+  background: rgba(255,255,255,0.04);
+  border: 0.5px solid rgba(192,154,80,0.15);
+  border-radius: 4px;
+  padding: 1.2rem 1.4rem;
+  margin-top: 1.5rem;
+}
+
+.rtitle {
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.rrow { margin-bottom: 0.75rem; }
+
+.rname {
+  font-size: 0.78rem;
+  color: rgba(245,239,229,0.7);
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.rcount { font-size: 0.72rem; color: rgba(245,239,229,0.35); }
+
+.bar-bg {
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 4px;
+  background: var(--wine-mid);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+.bar.gold { background: var(--gold); }
+
+.rtotal {
+  font-size: 0.72rem;
+  color: rgba(245,239,229,0.3);
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 0.5px solid rgba(192,154,80,0.1);
+  letter-spacing: 0.1em;
+}
+
+/* ── MESSAGES SECTION ──────────────────────────────────────── */
+.msg-section { background: var(--parchment); padding: 5rem 2rem; }
+.msg-inner { max-width: 800px; margin: 0 auto; }
+
+.couple-names {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--wine);
+  text-align: center;
+  margin-bottom: 0.5rem;
+  line-height: 1.1;
+}
+
+.couple-sub {
+  text-align: center;
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 3rem;
+}
+
+.msg-form-box {
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.9rem;
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  border: 1px solid var(--border);
+  background: var(--cream);
+  color: var(--text);
+  margin-bottom: 1.2rem;
+  outline: none;
+  transition: border-color 0.2s;
+  border-radius: 0;
+}
+
+.form-input:focus { border-color: var(--wine-mid); }
+
+textarea.form-input {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+.char-count {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-align: right;
+  margin-top: -1rem;
+  margin-bottom: 1.2rem;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-wine {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.65rem 1.8rem;
+  background: var(--wine);
+  border: none;
+  color: #F5EFE5;
+  cursor: pointer;
+  font-weight: 400;
+  transition: background 0.2s;
+  border-radius: 0;
+}
+
+.btn-wine:hover { background: var(--wine-mid); }
+
+.msg-sent-ok {
+  font-size: 0.8rem;
+  color: var(--wine-mid);
+  font-style: italic;
+  display: none;
+}
+
+/* mural */
+.mural-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.mural-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--dark);
+}
+
+.mural-count {
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.mural-empty {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-style: italic;
+  padding: 3rem 0;
+}
+
+.msg-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: 1.4rem 1.6rem;
+  margin-bottom: 1px;
+  position: relative;
+  transition: border-color 0.2s;
+}
+
+.msg-card:hover { border-color: #C4B49E; }
+
+.msg-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.6rem;
+}
+
+.msg-author {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--dark);
+}
+
+.msg-time {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+.msg-text {
+  font-size: 0.9rem;
+  color: var(--text);
+  line-height: 1.7;
+  padding-right: 3rem;
+}
+
+.msg-like-btn {
+  position: absolute;
+  bottom: 1rem;
+  right: 1.2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-family: 'Jost', sans-serif;
+  transition: color 0.2s;
+  padding: 4px;
+}
+
+.msg-like-btn:hover { color: var(--wine); }
+.msg-like-btn.liked { color: var(--wine); }
+
+/* ── FOOTER ──────────────────────────────────────────────────── */
+footer {
+  background: var(--dark);
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.footer-line {
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  margin: 0 auto 1.5rem;
+  opacity: 0.4;
+}
+
+.footer-text {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245,239,229,0.25);
+}
+
+/* ── ANIMATIONS ──────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scaleX(0); }
+  to   { opacity: 1; transform: scaleX(1); }
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 0.9; }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 640px) {
+  .wine-grid { grid-template-columns: 1fr; }
+  .v-grid    { grid-template-columns: 1fr 1fr; }
+  .hero-countries { gap: 0.7rem; }
+  .card-row { grid-template-columns: 60px 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HERO ─────────────────────────────────────────────────── -->
+<section class="hero">
+  <p class="hero-ornament">Caderno de Vinhos</p>
+  <h1 class="hero-title">Uma viagem<br>pelo <em>mundo</em><br>em taças</h1>
+  <div class="hero-line"></div>
+  <p class="hero-sub">10 rótulos · 7 países · 1 evento</p>
+  <div class="hero-countries">
+    <span class="country-chip">🇫🇷 França</span>
+    <span class="country-chip">🇮🇹 Itália</span>
+    <span class="country-chip">🇺🇸 EUA</span>
+    <span class="country-chip">🇿🇦 África do Sul</span>
+    <span class="country-chip">🇵🇹 Portugal</span>
+    <span class="country-chip">🇭🇺 Hungria</span>
+  </div>
+  <div class="scroll-hint">
+    <span>Explorar</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ── NAV ───────────────────────────────────────────────────── -->
+<nav class="sticky-nav">
+  <a class="nav-link" href="#vinhos">Os vinhos</a>
+  <a class="nav-link" href="#votacao">Votação</a>
+  <a class="nav-link gold" href="#mensagens">Mensagem aos noivos</a>
+</nav>
+
+<!-- ── VINHOS ────────────────────────────────────────────────── -->
+<section id="vinhos">
+  <div class="section">
+    <p class="section-label">Seleção da noite</p>
+    <h2 class="section-title">Os rótulos do evento</h2>
+
+    <div class="filter-row">
+      <button class="filter-btn active" data-filter="all">Todos</button>
+      <button class="filter-btn" data-filter="branco">Branco</button>
+      <button class="filter-btn" data-filter="rose">Rosé</button>
+      <button class="filter-btn" data-filter="tinto">Tinto</button>
+      <button class="filter-btn" data-filter="tawny">Tawny</button>
+      <button class="filter-btn" data-filter="sobremesa">Sobremesa</button>
+    </div>
+
+    <div class="wine-grid" id="wineGrid">
+
+      <article class="wine-card reveal" data-type="branco" style="--card-accent:#3B6D11">
+        <div class="card-top"><span class="card-flag">🇫🇷</span><span class="card-badge badge-branco">Branco</span></div>
+        <h3 class="card-name">Chablis Denis Race</h3>
+        <p class="card-producer">Domaine Denis Race</p>
+        <div class="card-divider"></div>
+        <div class="card-row"><span class="row-label">Região</span><span class="row-value">Chablis, Borgonha — França</span></div>
+        <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">100% Chardonnay</span></div>
+        <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Domaine familiar, 4ª geração. 18 ha com videiras de 2 a 65 anos em solo Kimmeridgian.</span></div>
+        <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Pêssego branco, flores, mineralidade marcante, acidez vibrante. 9–10 meses sobre borras finas em inox.</span></div>
+      </article>
+
+      <article class="wine-card reveal" data-type="rose" style="--card-accent:#993556">
+        <div class="card-top"><span class="card-flag">🇫🇷</span><span class="card-badge badge-rose">Rosé</span></div>
+        <h3 class="card-name">Rosé de Provence Rollier</h3>
+        <p class="card-producer">Château La Martinette</p>
+        <div class="card-divider"></div>
+        <div class="card-row"><span class="row-label">Região</span><span class="row-value">Côtes de Provence — França</span></div>
+        <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Grenache, Tibouren, Cinsault, Syrah, Vermentino</span></div>
+        <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Château La Martinette, Provence. Prensagem suave com descarte de 20% do suco de menor qualidade.</span></div>
+        <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Morango, framboesa, melancia, toque cítrico. Fresco, equilibrado. Estágio em inox.</span></div>
+      </article>
+
+      <article class="wine-card reveal" data-type="tinto" style="--card-accent:#A32D2D">
+        <div class="card-top"><span class="card-flag">🇮🇹</span><span class="card-badge badge-tinto">Tinto</span></div>
+        <h3 class="card-name">Rosso di Toscana Cancellaia</h3>
+        <p class="card-producer">Pakravan-Papi</p>
+        <div class="card-divider"></div>
+        <div class="card-row"><span class="row-label">Região</span><span class="row-value">Riparbella, Toscana IGT — Itália</span></div>
+        <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Cabernet Sauvignon (~70%) e Cabernet Franc (~30%)</span></div>
+        <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Família Pakravan-Papi. 200m de altitude, solo vulcânico. Colheita manual em setembro.</span></div>
+        <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Frutas pretas, azeitona, chocolate amargo, alecrim. Corpo cheio, taninos firmes e integrados.</span></div>
+      </article>
+
+      <article class="wine-card reveal" data-type="tinto" style="--card-accent:#A32D2D">
+        <div class="card-top"><span class="card-flag">🇮🇹</span><span class="card-badge badge-tinto">Tinto</span></div>
+        <h3 class="card-name">Brunello di Montalcino Collosorbo</h3>
+        <p class="card-producer">Tenuta di Collosorbo</p>
+        <div class="card-divider"></div>
+        <div class="card-row"><span class="row-label">Região</span><span class="row-value">Montalcino, Toscana DOCG — Itália</span></div>
+        <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">100% Sangiovese (Brunello)</span></div>
+        <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Família Ciacci desde 1850. 35 ha orgânicos ao sul de Montalcino, solo de argila vermelha e galestro.</span></div>
+        <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Cereja silvestre, especiarias, toque balsâmico. Estruturado, taninos elegantes. 3 anos em carvalho.</span></div>
+      </article>
+
+      <article class="wine-card reveal" data-type="tinto" style="--card-accent:#A32D2D">
+        <div class="card-top"><span class="card-flag">🇫🇷</span><span class="card-badge badge-tinto">Tinto</span></div>
+        <h3 class="card-name">Fleur de Pédesclaux — Pauillac</h3>
+        <p class="card-producer">Château Pédesclaux</p>
+        <div class="card-divider"></div>
+        <div class="card-row"><span class="row-label">Região</span><span class="row-value">Pauillac, Médoc, Bordeaux — França</span></div>
+        <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Merlot (~50%), Cabernet Sauvignon (~48%), Petit Verdot</span></div>
+        <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">2º vinho do Château Pédesclaux, 5º Grand Cru Classé de 1855. Família Lorenzetti. Orgânico desde 2019.</span></div>
+        <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Amoras silvestres, cedro, cânfora. Delicado, taninos aveludados. 16 meses em barricas de carvalho.</span></div>
+      </article>
+
+      <article class="wine-card reveal" data-type="tinto" style="--card-accent:#A32D2D">
+        <div class="card-top"><span class="card-flag">🇫🇷</span><span class="card-badge badge-tinto">Tinto</span></div>
+        <h3 class="card-name">Saint-Émilion Grand Cru Tour de Laroque</h3>
+        <p class="card-producer">Château Laroque</p>
+        <div class="card-divider"></div>
+        <div class="card-row"><span class="row-label">Região</span><span class="row-value">Saint-Émilion Grand Cru, Bordeaux — França</span></div>
+        <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Merlot (~94%) e Cabernet Franc</span></div>
+        <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">2º vinho do Château Laroque (Fam. Beaumartin), maior propriedade de Saint-Émilion. Grand Cru Classé desde 1996.</span></div>
+        <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Frutas vermelhas e pretas maduras, chocolate, especiarias. Elegante e sedoso. Vinhas com 50+ anos.</span></div>
+      </article>
+
+      <article class="wine-card reveal" data-type="tinto" style="--card-accent:#A32D2D">
+        <div class="card-top"><span class="card-flag">🇺🇸</span><span class="card-badge badge-tinto">Tinto</span></div>
+        <h3 class="card-name">Silverado Cabernet Franc</h3>
+        <p class="card-producer">Silverado Vineyards</p>
+        <div class="card-divider"></div>
+        <div class="card-row"><span class="row-label">Região</span><span class="row-value">Napa Valley, Stags Leap District — Califórnia, EUA</span></div>
+        <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Cabernet Franc</span></div>
+        <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Silverado Vineyards, fundada em 1981. 100% estate grown, vinhedos pioneiros em Napa desde 1860.</span></div>
+        <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Frutas vermelhas brilhantes, mineralidade, especiarias, toque herbal. Final longo e sedoso.</span></div>
+      </article>
+
+      <article class="wine-card reveal" data-type="tinto" style="--card-accent:#A32D2D">
+        <div class="card-top"><span class="card-flag">🇿🇦</span><span class="card-badge badge-tinto">Tinto</span></div>
+        <h3 class="card-name">Backsberg Pumphouse Syrah</h3>
+        <p class="card-producer">Backsberg Family Wines</p>
+        <div class="card-divider"></div>
+        <div class="card-row"><span class="row-label">Região</span><span class="row-value">Paarl, Western Cape — África do Sul</span></div>
+        <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">100% Syrah/Shiraz</span></div>
+        <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Família Back. Certificada carbon neutral. Vinhedos de 20 anos nas encostas do Simonsberg.</span></div>
+        <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Ameixa, cereja preta, alcaçuz, anis, baunilha. Aveludado e profundo. 12–18 meses em carvalho.</span></div>
+      </article>
+
+      <article class="wine-card reveal" data-type="tawny" style="--card-accent:#854F0B">
+        <div class="card-top"><span class="card-flag">🇵🇹</span><span class="card-badge badge-tawny">Tawny</span></div>
+        <h3 class="card-name">Porto 10 Anos Decanter — Carvalhas</h3>
+        <p class="card-producer">Quinta das Carvalhas / Real Companhia Velha</p>
+        <div class="card-divider"></div>
+        <div class="card-row"><span class="row-label">Região</span><span class="row-value">Vale do Douro, Cima Corgo — Portugal</span></div>
+        <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Touriga Nacional, Touriga Franca, Tinta Roriz e outras castas durienses</span></div>
+        <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Quinta das Carvalhas, propriedade da Real Companhia Velha (fund. 1756). Vinhas centenárias frente ao Pinhão.</span></div>
+        <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Avelãs, figos, mel, caramelo, especiarias finas. Âmbar brilhante, sedoso. Envelhecimento médio de 10 anos.</span></div>
+      </article>
+
+      <article class="wine-card reveal" data-type="sobremesa" style="--card-accent:#3C3489">
+        <div class="card-top"><span class="card-flag">🇭🇺</span><span class="card-badge badge-sobremesa">Sobremesa</span></div>
+        <h3 class="card-name">Sauska Tokaji 5 Puttonyos</h3>
+        <p class="card-producer">Sauska Winery</p>
+        <div class="card-divider"></div>
+        <div class="card-row"><span class="row-label">Região</span><span class="row-value">Tokaj-Hegyalja — Hungria</span></div>
+        <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Furmint e Hárslevelű (uvas botrytizadas — podridão nobre)</span></div>
+        <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Família Sauska, winery em Mád. Tokaj é patrimônio da UNESCO, produz vinhos doces desde o séc. XVII.</span></div>
+        <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Damasco seco, laranja cristalizada, mel, gengibre, abacaxi. Doce com acidez cortante. 20 meses em carvalho.</span></div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── VOTAÇÃO ────────────────────────────────────────────────── -->
+<section id="votacao" class="vote-section">
+  <div class="vote-inner">
+    <p class="section-label">Participação</p>
+    <h2 class="section-title">Qual foi o seu favorito?</h2>
+    <p class="vote-sub">Selecione até 3 vinhos e registre seu voto. O resultado aparece em tempo real.</p>
+
+    <div class="v-grid" id="vGrid"></div>
+
+    <div class="vote-actions">
+      <button class="btn-gold" id="voteBtn" disabled onclick="submitVote()">Registrar voto</button>
+      <span class="vote-clabel" id="cLabel">0 de 3 selecionados</span>
+    </div>
+    <div class="vote-success" id="vSuccess">✓ Voto registrado. Obrigado!</div>
+
+    <div class="results-box">
+      <div class="rtitle">Resultado ao vivo</div>
+      <div id="resultsArea"></div>
+      <div class="rtotal" id="totalLabel">0 votos registrados</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MENSAGENS ──────────────────────────────────────────────── -->
+<section id="mensagens" class="msg-section">
+  <div class="msg-inner">
+    <p class="section-label" style="text-align:center">Livro de visitas</p>
+    <h2 class="couple-names">Para os noivos</h2>
+    <p class="couple-sub">Deixe sua mensagem, desejo ou memória</p>
+
+    <div class="msg-form-box">
+      <label class="form-label">Seu nome</label>
+      <input class="form-input" id="msgName" type="text" placeholder="Como quer ser identificado?" maxlength="50">
+
+      <label class="form-label">Mensagem</label>
+      <textarea class="form-input" id="msgText" placeholder="Escreva seu desejo, memória ou palavra de carinho para os noivos..." maxlength="400" oninput="updateChar()"></textarea>
+      <div class="char-count"><span id="charCount">0</span> / 400</div>
+
+      <div class="form-footer">
+        <span class="msg-sent-ok" id="msgSentOk">Mensagem enviada com carinho!</span>
+        <button class="btn-wine" onclick="sendMsg()">Enviar mensagem</button>
+      </div>
+    </div>
+
+    <div class="mural-header">
+      <span class="mural-title">Mural dos convidados</span>
+      <span class="mural-count" id="muralCount">0 mensagens</span>
+    </div>
+    <div id="muralArea"></div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-line"></div>
+  <p class="footer-text">Uma noite especial · Celebrando com os melhores vinhos do mundo</p>
+</footer>
+
+<script>
+/* ── FILTER ── */
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    document.querySelectorAll('.wine-card').forEach(c => {
+      c.style.display = (f === 'all' || c.dataset.type === f) ? '' : 'none';
+    });
+  });
+});
+
+/* ── REVEAL ON SCROLL ── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ── VOTING ── */
+const WINES = [
+  {id:'chablis',    name:'Chablis Denis Race',                      badge:'badge-branco', label:'Branco'},
+  {id:'rose',       name:'Rosé de Provence Rollier',                badge:'badge-rose',   label:'Rosé'},
+  {id:'cancellaia', name:'Rosso di Toscana Cancellaia',             badge:'badge-tinto',  label:'Tinto'},
+  {id:'collosorbo', name:'Brunello di Montalcino Collosorbo',       badge:'badge-tinto',  label:'Tinto'},
+  {id:'pedesclaux', name:'Fleur de Pédesclaux — Pauillac',          badge:'badge-tinto',  label:'Tinto'},
+  {id:'laroque',    name:'Saint-Émilion Grand Cru Tour de Laroque', badge:'badge-tinto',  label:'Tinto'},
+  {id:'silverado',  name:'Silverado Cabernet Franc',                badge:'badge-tinto',  label:'Tinto'},
+  {id:'backsberg',  name:'Backsberg Pumphouse Syrah',               badge:'badge-tinto',  label:'Tinto'},
+  {id:'carvalhas',  name:'Porto 10 Anos — Carvalhas',               badge:'badge-tawny',  label:'Tawny'},
+  {id:'sauska',     name:'Sauska Tokaji 5 Puttonyos',               badge:'badge-sobremesa', label:'Sobremesa'},
+];
+
+const MAX = 3;
+let selected = new Set(), voted = false, votes = {}, messages = [];
+WINES.forEach(w => votes[w.id] = 0);
+
+const vGrid = document.getElementById('vGrid');
+WINES.forEach(w => {
+  const el = document.createElement('div');
+  el.className = 'v-card';
+  el.dataset.id = w.id;
+  el.innerHTML = `
+    <div class="v-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="${w.badge.includes('branco')?'#1C110A':'#1C110A'}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="v-badge ${w.badge}">${w.label}</span>
+    <div class="v-name">${w.name}</div>`;
+  el.addEventListener('click', () => toggleWine(w.id, el));
+  vGrid.appendChild(el);
+});
+
+function toggleWine(id, el) {
+  if (voted) return;
+  if (selected.has(id)) { selected.delete(id); el.classList.remove('selected'); }
+  else { if (selected.size >= MAX) return; selected.add(id); el.classList.add('selected'); }
+  const n = selected.size;
+  document.getElementById('cLabel').textContent = `${n} de ${MAX} selecionado${n !== 1 ? 's' : ''}`;
+  document.getElementById('voteBtn').disabled = n === 0;
+  document.querySelectorAll('.v-card:not(.selected)').forEach(c => c.classList.toggle('disabled', n >= MAX));
+}
+
+async function submitVote() {
+  if (voted || selected.size === 0) return;
+  voted = true;
+  document.getElementById('voteBtn').disabled = true;
+  selected.forEach(id => { votes[id] = (votes[id] || 0) + 1; });
+  try { await window.storage.set('wine_votes_site', JSON.stringify(votes), true); } catch(e) {}
+  document.querySelectorAll('.v-card').forEach(c => { c.classList.add('disabled'); c.style.cursor = 'default'; });
+  document.getElementById('vSuccess').style.display = 'block';
+  renderResults();
+}
+
+function renderResults() {
+  const total = Object.values(votes).reduce((a, b) => a + b, 0);
+  const max = Math.max(...Object.values(votes), 1);
+  const sorted = [...WINES].sort((a, b) => (votes[b.id] || 0) - (votes[a.id] || 0));
+  document.getElementById('resultsArea').innerHTML = sorted.map((w, i) => {
+    const v = votes[w.id] || 0;
+    const pct = total > 0 ? Math.round(v / total * 100) : 0;
+    const barW = Math.round(v / max * 100);
+    const isGold = i === 0 && v > 0;
+    return `<div class="rrow">
+      <div class="rname"><span>${isGold ? '★ ' : ''}${w.name}</span><span class="rcount">${v} voto${v !== 1 ? 's' : ''} · ${pct}%</span></div>
+      <div class="bar-bg"><div class="bar${isGold ? ' gold' : ''}" style="width:${barW}%"></div></div>
+    </div>`;
+  }).join('');
+  document.getElementById('totalLabel').textContent = `${total} voto${total !== 1 ? 's' : ''} registrado${total !== 1 ? 's' : ''} no total`;
+}
+
+/* ── MESSAGES ── */
+function updateChar() {
+  document.getElementById('charCount').textContent = document.getElementById('msgText').value.length;
+}
+
+function timeAgo(ts) {
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60) return 'agora mesmo';
+  if (diff < 3600) return `há ${Math.floor(diff / 60)} min`;
+  if (diff < 86400) return `há ${Math.floor(diff / 3600)}h`;
+  return `há ${Math.floor(diff / 86400)}d`;
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function sendMsg() {
+  const name = document.getElementById('msgName').value.trim();
+  const text = document.getElementById('msgText').value.trim();
+  if (!name || !text) return;
+  const msg = { id: Date.now(), name, text, ts: Date.now(), likes: 0 };
+  messages.unshift(msg);
+  try { await window.storage.set('wedding_msgs_site', JSON.stringify(messages), true); } catch(e) {}
+  document.getElementById('msgName').value = '';
+  document.getElementById('msgText').value = '';
+  document.getElementById('charCount').textContent = '0';
+  const ok = document.getElementById('msgSentOk');
+  ok.style.display = 'inline';
+  setTimeout(() => ok.style.display = 'none', 3000);
+  renderMural();
+}
+
+async function likeMsg(id) {
+  const msg = messages.find(m => m.id === id);
+  if (!msg) return;
+  msg.likes = (msg.likes || 0) + 1;
+  try { await window.storage.set('wedding_msgs_site', JSON.stringify(messages), true); } catch(e) {}
+  renderMural();
+}
+
+function renderMural() {
+  const area = document.getElementById('muralArea');
+  document.getElementById('muralCount').textContent = `${messages.length} mensage${messages.length !== 1 ? 'ns' : 'm'}`;
+  if (messages.length === 0) {
+    area.innerHTML = '<p class="mural-empty">Ainda não há mensagens. Seja o primeiro a escrever!</p>';
+    return;
+  }
+  area.innerHTML = messages.map(m => `
+    <div class="msg-card">
+      <div class="msg-top">
+        <span class="msg-author">${esc(m.name)}</span>
+        <span class="msg-time">${timeAgo(m.ts)}</span>
+      </div>
+      <p class="msg-text">${esc(m.text)}</p>
+      <button class="msg-like-btn${m.likes > 0 ? ' liked' : ''}" onclick="likeMsg(${m.id})">
+        ♡ ${m.likes > 0 ? m.likes : ''}
+      </button>
+    </div>`).join('');
+}
+
+async function loadAll() {
+  try {
+    const rv = await window.storage.get('wine_votes_site', true);
+    if (rv && rv.value) votes = JSON.parse(rv.value);
+  } catch(e) {}
+  try {
+    const rm = await window.storage.get('wedding_msgs_site', true);
+    if (rm && rm.value) messages = JSON.parse(rm.value);
+  } catch(e) {}
+  renderResults();
+  renderMural();
+}
+
+loadAll();
+</script>
+</body>
+</html>
