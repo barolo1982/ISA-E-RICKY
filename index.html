@@ -119,23 +119,21 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
 .btn-wine:disabled{opacity:.4;cursor:not-allowed}
 .msg-sent-ok{font-size:.95rem;color:var(--gold-lt);font-style:italic;display:none}
 
-/* MESSAGE CAROUSEL */
-.msg-carousel-wrap{position:relative;margin-top:1.5rem}
-.msg-carousel-outer{overflow:hidden;border-radius:3px}
-.msg-carousel-track{display:flex;transition:transform .45s cubic-bezier(.25,.46,.45,.94)}
-.msg-slide{flex:0 0 100%;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);padding:2rem 2.2rem;min-height:160px;display:flex;flex-direction:column;justify-content:center}
-.msg-slide-author{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:var(--gold-lt);margin-bottom:.6rem}
-.msg-slide-text{font-size:1.05rem;color:var(--text-mid);line-height:1.75}
-.msg-slide-time{font-size:.78rem;color:var(--text-dim);margin-top:.8rem;letter-spacing:.08em}
-.msg-carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(11,8,6,.8);border:1px solid var(--border);color:var(--gold-lt);width:42px;height:42px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:10;backdrop-filter:blur(6px)}
-.msg-carousel-btn:hover{background:rgba(192,154,80,.18);border-color:var(--border-md)}
-.msg-carousel-btn.prev{left:-16px}
-.msg-carousel-btn.next{right:-16px}
-.msg-carousel-btn:disabled{opacity:.22;cursor:not-allowed}
-.msg-carousel-dots{display:flex;gap:6px;justify-content:center;margin-top:14px;flex-wrap:wrap}
-.msg-dot{width:6px;height:6px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);cursor:pointer;transition:all .2s}
+/* MESSAGE CARDS ROTATIVO */
+.msg-cards-wrap{position:relative;margin-top:1.5rem;touch-action:pan-y}
+.msg-cards-stage{position:relative;height:200px;overflow:hidden}
+.msg-card-item{position:absolute;inset:0;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--gold);padding:1.8rem 2rem;display:flex;flex-direction:column;justify-content:center;
+  opacity:0;transform:translateX(60px);transition:opacity .6s ease,transform .6s ease;pointer-events:none}
+.msg-card-item.active{opacity:1;transform:translateX(0);pointer-events:auto}
+.msg-card-item.exit-left{opacity:0;transform:translateX(-60px)}
+.msg-card-item.exit-right{opacity:0;transform:translateX(60px)}
+.msg-card-author{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-style:italic;color:var(--gold-lt);margin-bottom:.6rem}
+.msg-card-text{font-size:1.05rem;color:var(--text);line-height:1.7;flex:1}
+.msg-card-time{font-size:.78rem;color:var(--text-dim);margin-top:.7rem}
+.msg-cards-nav{display:flex;align-items:center;justify-content:center;gap:1rem;margin-top:14px}
+.msg-dot{width:7px;height:7px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);cursor:pointer;transition:all .2s;flex-shrink:0}
 .msg-dot.active{background:var(--gold);transform:scale(1.3)}
-.msg-carousel-info{text-align:center;font-size:.82rem;color:var(--text-dim);margin-top:6px}
+.msg-cards-info{font-size:.82rem;color:var(--text-dim)}
 .mural-empty{text-align:center;font-size:1rem;color:var(--text-dim);font-style:italic;padding:3rem 0}
 .mural-count{font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-top:.6rem;text-align:center}
 
@@ -349,14 +347,12 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
     </div>
   </div>
   <p class="mural-empty" id="muralEmpty">Ainda não há mensagens. Seja o primeiro a escrever!</p>
-  <div class="msg-carousel-wrap" id="msgCarouselWrap" style="display:none">
-    <div class="msg-carousel-outer">
-      <div class="msg-carousel-track" id="msgTrack"></div>
+  <div class="msg-cards-wrap" id="msgCardsWrap" style="display:none">
+    <div class="msg-cards-stage" id="msgStage"></div>
+    <div class="msg-cards-nav">
+      <div class="msg-cards-info" id="msgInfo"></div>
+      <div id="msgDots" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center"></div>
     </div>
-    <button class="msg-carousel-btn prev" id="msgPrev" onclick="moveMsg(-1)">&#8592;</button>
-    <button class="msg-carousel-btn next" id="msgNext" onclick="moveMsg(1)">&#8594;</button>
-    <div class="msg-carousel-dots" id="msgDots"></div>
-    <p class="msg-carousel-info" id="msgInfo"></p>
   </div>
   <p class="mural-count" id="muralCount"></p>
 </div>
@@ -538,56 +534,108 @@ const msgsCol=collection(db,'eventos','isa-e-ricky','mensagens');
 
 let msgIndex = 0;
 let msgList = [];
+let msgTimer = null;
 
-function renderMsgCarousel(){
-  const wrap = document.getElementById('msgCarouselWrap');
+function showMsg(idx, dir){
+  const stage = document.getElementById('msgStage');
+  const cards = stage.querySelectorAll('.msg-card-item');
+
+  // Sai o atual
+  cards.forEach(c=>{
+    if(c.classList.contains('active')){
+      c.classList.remove('active');
+      c.classList.add(dir === 1 ? 'exit-left' : 'exit-right');
+      setTimeout(()=>c.classList.remove('exit-left','exit-right'), 700);
+    }
+  });
+
+  // Entra o novo
+  msgIndex = (idx + msgList.length) % msgList.length;
+  const next = stage.querySelector(`[data-idx="${msgIndex}"]`);
+  if(next){
+    next.style.transform = dir === 1 ? 'translateX(60px)' : 'translateX(-60px)';
+    requestAnimationFrame(()=>{
+      next.style.transform = '';
+      next.classList.add('active');
+    });
+  }
+
+  // Dots
+  document.querySelectorAll('.msg-dot').forEach((d,i)=>d.classList.toggle('active',i===msgIndex));
+  document.getElementById('msgInfo').textContent = `${msgIndex+1} / ${msgList.length}`;
+}
+
+function startMsgTimer(){
+  if(msgTimer) clearInterval(msgTimer);
+  if(msgList.length <= 1) return;
+  msgTimer = setInterval(()=> showMsg(msgIndex+1, 1), 4000);
+}
+
+function renderMsgCards(){
+  const wrap = document.getElementById('msgCardsWrap');
   const empty = document.getElementById('muralEmpty');
   const countEl = document.getElementById('muralCount');
 
   if(msgList.length === 0){
-    empty.style.display = 'block';
-    wrap.style.display = 'none';
-    countEl.textContent = '';
-    return;
+    empty.style.display='block'; wrap.style.display='none';
+    countEl.textContent=''; return;
   }
-  empty.style.display = 'none';
-  wrap.style.display = 'block';
+  empty.style.display='none'; wrap.style.display='block';
   countEl.textContent = `${msgList.length} mensage${msgList.length!==1?'ns':'m'}`;
 
-  if(msgIndex >= msgList.length) msgIndex = 0;
-
-  document.getElementById('msgTrack').innerHTML = msgList.map(m=>`
-    <div class="msg-slide">
-      <div class="msg-slide-author">${esc(m.name)}</div>
-      <div class="msg-slide-text">${esc(m.text)}</div>
-      <div class="msg-slide-time">${timeAgo(m.ts)}</div>
+  const stage = document.getElementById('msgStage');
+  stage.innerHTML = msgList.map((m,i)=>`
+    <div class="msg-card-item${i===msgIndex?' active':''}" data-idx="${i}">
+      <div class="msg-card-author">${esc(m.name)}</div>
+      <div class="msg-card-text">${esc(m.text)}</div>
+      <div class="msg-card-time">${timeAgo(m.ts)}</div>
     </div>`).join('');
 
-  document.getElementById('msgTrack').style.transform = `translateX(-${msgIndex*100}%)`;
-  document.getElementById('msgDots').innerHTML = msgList.map((_,i)=>`<div class="msg-dot${i===msgIndex?' active':''}" onclick="goMsg(${i})"></div>`).join('');
-  document.getElementById('msgPrev').disabled = msgIndex === 0;
-  document.getElementById('msgNext').disabled = msgIndex === msgList.length-1;
+  // Altura dinâmica baseada no maior card
+  stage.style.height = '';
+  setTimeout(()=>{
+    const h = Math.max(...Array.from(stage.querySelectorAll('.msg-card-item')).map(c=>c.scrollHeight));
+    stage.style.height = Math.max(h, 160) + 'px';
+  }, 50);
+
+  document.getElementById('msgDots').innerHTML = msgList.map((_,i)=>
+    `<div class="msg-dot${i===msgIndex?' active':''}" onclick="goMsg(${i})"></div>`).join('');
   document.getElementById('msgInfo').textContent = `${msgIndex+1} / ${msgList.length}`;
+
+  startMsgTimer();
 }
 
-window.moveMsg = function(dir){
-  msgIndex = Math.max(0, Math.min(msgList.length-1, msgIndex+dir));
-  renderMsgCarousel();
-};
-window.goMsg = function(i){ msgIndex=i; renderMsgCarousel(); };
+window.goMsg = function(i){ clearInterval(msgTimer); showMsg(i, i>msgIndex?1:-1); startMsgTimer(); };
 
-// swipe no carrossel de mensagens
+// Swipe
 (function(){
-  let sx=0;
-  document.addEventListener('touchstart',e=>{const t=e.target.closest('#msgCarouselWrap');if(t)sx=e.touches[0].clientX;},{passive:true});
-  document.addEventListener('touchend',e=>{const t=e.target.closest('#msgCarouselWrap');if(!t||!sx)return;const dx=sx-e.changedTouches[0].clientX;if(Math.abs(dx)>40)window.moveMsg(dx>0?1:-1);sx=0;},{passive:true});
+  let sx=0, sy=0;
+  const el = ()=>document.getElementById('msgCardsWrap');
+  document.addEventListener('touchstart',e=>{
+    if(!e.target.closest('#msgCardsWrap'))return;
+    sx=e.touches[0].clientX; sy=e.touches[0].clientY;
+  },{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(!e.target.closest('#msgCardsWrap')||!sx)return;
+    const dx=sx-e.changedTouches[0].clientX;
+    const dy=sy-e.changedTouches[0].clientY;
+    if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>40){
+      clearInterval(msgTimer);
+      showMsg(msgIndex+(dx>0?1:-1), dx>0?1:-1);
+      startMsgTimer();
+    }
+    sx=0;
+  },{passive:true});
 })();
 
 async function loadMessages(){
   try{
     const snap = await getDocs(query(msgsCol, orderBy('ts','desc')));
-    msgList = snap.docs.map(d=>({...d.data(),id:d.id}));
-    renderMsgCarousel();
+    const newList = snap.docs.map(d=>({...d.data(),id:d.id}));
+    const changed = newList.length !== msgList.length;
+    msgList = newList;
+    if(changed) msgIndex = 0;
+    renderMsgCards();
   }catch(e){console.error('Erro mensagens:',e);}
 }
 
