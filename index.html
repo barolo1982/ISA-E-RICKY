@@ -118,19 +118,24 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
 .btn-wine:hover{background:var(--wine-lt)}
 .btn-wine:disabled{opacity:.4;cursor:not-allowed}
 .msg-sent-ok{font-size:.95rem;color:var(--gold-lt);font-style:italic;display:none}
-.mural-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.3rem;padding-bottom:.9rem;border-bottom:1px solid var(--border)}
-.mural-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--text)}
-.mural-count{font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim)}
+
+/* MURAL ANIMADO */
+.mural-stage{width:100%;margin-top:1.5rem}
+.mural-feed{display:flex;flex-direction:column;gap:10px}
+.mural-count{font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-top:1rem;text-align:center}
 .mural-empty{text-align:center;font-size:1rem;color:var(--text-dim);font-style:italic;padding:3rem 0}
-.msg-card{background:var(--surface);border:1px solid var(--border);padding:1.5rem 1.7rem;margin-bottom:2px;position:relative;transition:border-color .2s}
+.msg-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);padding:1.4rem 1.7rem;position:relative;
+  opacity:0;transform:translateX(-24px);
+  animation:slideIn .5s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes slideIn{
+  to{opacity:1;transform:translateX(0)}
+}
 .msg-card:hover{border-color:var(--border-md)}
-.msg-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.6rem}
-.msg-author{font-weight:500;font-size:1.05rem;color:var(--text)}
-.msg-time{font-size:.85rem;color:var(--text-dim)}
-.msg-text{font-size:1.05rem;color:var(--text-mid);line-height:1.8;padding-right:3rem}
-.like-btn{position:absolute;bottom:1rem;right:1.2rem;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;color:var(--text-dim);font-size:1rem;font-family:'Jost',sans-serif;transition:color .2s;padding:6px}
-.like-btn:hover{color:var(--gold)}
-.like-btn.liked{color:var(--gold)}
+.msg-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.5rem;flex-wrap:wrap;gap:.4rem}
+.msg-author{font-weight:500;font-size:1.05rem;color:var(--gold-lt)}
+.msg-time{font-size:.82rem;color:var(--text-dim)}
+.msg-text{font-size:1.05rem;color:var(--text-mid);line-height:1.75}
+.msg-new-badge{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);background:rgba(192,154,80,.12);border:1px solid var(--border);padding:2px 7px;border-radius:2px;margin-left:6px;vertical-align:middle}
 
 /* INTEREST */
 .interest-bg{background:var(--bg4);border-top:1px solid var(--border)}
@@ -341,11 +346,11 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
       <button class="btn-wine" id="msgBtn" onclick="sendMsg()">Enviar mensagem</button>
     </div>
   </div>
-  <div class="mural-header">
-    <span class="mural-title">Mural dos convidados</span>
-    <span class="mural-count" id="muralCount">0 mensagens</span>
+  <div class="mural-stage">
+    <div class="mural-feed" id="muralFeed"></div>
+    <p class="mural-empty" id="muralEmpty" style="display:none">Ainda não há mensagens. Seja o primeiro a escrever!</p>
   </div>
-  <div id="muralArea"></div>
+  <p class="mural-count" id="muralCount"></p>
 </div>
 </section>
 
@@ -471,7 +476,12 @@ window.submitVote=async function(){
   document.getElementById('voteBtn').disabled=true;
   const vRef=doc(db,'eventos','isa-e-ricky','votacao','resultado');
   try{
-    await setDoc(vRef, Object.fromEntries(WINES.map(w=>[w.id,0])), {merge:true});
+    // Verifica se documento existe — se não, cria zerado uma única vez
+    const snap=await getDoc(vRef);
+    if(!snap.exists()){
+      await setDoc(vRef, Object.fromEntries(WINES.map(w=>[w.id,0])));
+    }
+    // Incrementa APENAS os votos selecionados — não toca nos outros
     const upd={};
     selected.forEach(id=>{upd[id]=increment(1);});
     await updateDoc(vRef, upd);
@@ -518,20 +528,45 @@ function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g
 
 const msgsCol=collection(db,'eventos','isa-e-ricky','mensagens');
 
+let knownMsgIds = new Set();
+
 async function loadMessages(){
   try{
-    const snap=await getDocs(query(msgsCol,orderBy('ts','desc')));
-    const area=document.getElementById('muralArea');
-    document.getElementById('muralCount').textContent=`${snap.size} mensage${snap.size!==1?'ns':'m'}`;
-    if(snap.empty){area.innerHTML='<p class="mural-empty">Ainda não há mensagens. Seja o primeiro a escrever!</p>';return;}
-    area.innerHTML=snap.docs.map(d=>{
-      const m={...d.data(),id:d.id};
-      return `<div class="msg-card">
-        <div class="msg-top"><span class="msg-author">${esc(m.name)}</span><span class="msg-time">${timeAgo(m.ts)}</span></div>
+    const snap = await getDocs(query(msgsCol, orderBy('ts','desc')));
+    const count = snap.size;
+    const countEl = document.getElementById('muralCount');
+    const emptyEl = document.getElementById('muralEmpty');
+    const feed = document.getElementById('muralFeed');
+
+    countEl.textContent = count > 0 ? `${count} mensage${count!==1?'ns':'m'}` : '';
+
+    if(snap.empty){
+      emptyEl.style.display = 'block';
+      feed.innerHTML = '';
+      knownMsgIds.clear();
+      return;
+    }
+    emptyEl.style.display = 'none';
+
+    // Detecta mensagens novas para animar
+    const newIds = new Set(snap.docs.map(d=>d.id));
+    const hasNew = snap.docs.some(d=>!knownMsgIds.has(d.id));
+    knownMsgIds = newIds;
+
+    // Reconstrói o feed com animação escalonada
+    feed.innerHTML = snap.docs.map((d, i) => {
+      const m = {...d.data(), id: d.id};
+      const isNew = hasNew && i === 0;
+      const delay = i * 80;
+      return `<div class="msg-card" style="animation-delay:${delay}ms">
+        <div class="msg-top">
+          <span class="msg-author">${esc(m.name)}${isNew ? '<span class="msg-new-badge">novo</span>' : ''}</span>
+          <span class="msg-time">${timeAgo(m.ts)}</span>
+        </div>
         <p class="msg-text">${esc(m.text)}</p>
-        <button class="like-btn${m.likes>0?' liked':''}" onclick="likeMsg('${m.id}')">♡ ${m.likes>0?m.likes:''}</button>
       </div>`;
     }).join('');
+
   }catch(e){console.error('Erro mensagens:',e);}
 }
 
@@ -550,13 +585,6 @@ window.sendMsg=async function(){
     await loadMessages();
   }catch(e){console.error('Erro ao enviar:',e);}
   btn.disabled=false;
-};
-
-window.likeMsg=async function(id){
-  try{
-    await fsUpdate(doc(db,'eventos','isa-e-ricky','mensagens',id),{likes:increment(1)});
-    await loadMessages();
-  }catch(e){console.error(e);}
 };
 
 /* ── INTERESSE ── */
