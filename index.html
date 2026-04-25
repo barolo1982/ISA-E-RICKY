@@ -3,38 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Os Melhores Vinhos nos Momentos Mais Felizes</title>
+<title>Isa & Ricky — Os Melhores Vinhos nos Momentos Mais Felizes</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0B0806;
-  --bg2:#110E09;
-  --bg3:#16120D;
-  --surface:#1E1610;
-  --surface2:#271D13;
-  --wine:#7B2335;
-  --wine-lt:#A33347;
-  --gold:#C09A50;
-  --gold-lt:#E2C07A;
-  --text:#F2EAD8;
-  --text-mid:#C8B898;
-  --text-dim:#7A6A52;
-  --border:rgba(192,154,80,0.18);
-  --border-md:rgba(192,154,80,0.35);
+  --bg:#0B0806;--bg2:#110E09;--bg3:#16120D;--bg4:#0E0B07;
+  --surface:#1E1610;--surface2:#271D13;
+  --wine:#7B2335;--wine-lt:#A33347;
+  --gold:#C09A50;--gold-lt:#E2C07A;
+  --text:#F2EAD8;--text-mid:#C8B898;--text-dim:#7A6A52;
+  --border:rgba(192,154,80,0.18);--border-md:rgba(192,154,80,0.35);
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Jost',sans-serif;font-weight:300;font-size:17px;line-height:1.75}
 
 /* HERO */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:5rem 1.5rem 4rem;
-  background:radial-gradient(ellipse 95% 65% at 50% 20%,rgba(123,35,53,0.55) 0%,transparent 65%),var(--bg)}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:5rem 1.5rem 4rem;background:radial-gradient(ellipse 95% 65% at 50% 20%,rgba(123,35,53,0.55) 0%,transparent 65%),var(--bg)}
 .hero-eyebrow{font-size:12px;letter-spacing:.5em;color:var(--gold);text-transform:uppercase;margin-bottom:2.2rem;opacity:0;animation:fadeUp 1s .2s forwards}
 .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,9vw,7rem);font-weight:300;color:var(--text);line-height:1.05;opacity:0;animation:fadeUp 1s .4s forwards}
 .hero-title em{font-style:italic;color:var(--gold-lt)}
 .hero-line{width:52px;height:1px;background:var(--gold);margin:2.5rem auto;opacity:0;animation:scaleIn .8s .85s forwards}
-.hero-stats{display:flex;gap:0;opacity:0;animation:fadeUp 1s 1.05s forwards;border:1px solid var(--border);margin-bottom:2rem}
-.hero-stat{padding:.9rem 2rem;border-right:1px solid var(--border);last-child{border-right:none}}
+.hero-stats{display:flex;opacity:0;animation:fadeUp 1s 1.05s forwards;border:1px solid var(--border);margin-bottom:2rem}
+.hero-stat{padding:.9rem 2rem;border-right:1px solid var(--border)}
 .hero-stat:last-child{border-right:none}
 .stat-num{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--gold-lt);line-height:1;display:block}
 .stat-label{font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--text-dim)}
@@ -120,10 +111,12 @@ body{background:var(--bg);color:var(--text);font-family:'Jost',sans-serif;font-w
 .form-input::placeholder{color:var(--text-dim)}
 .form-input:focus{border-color:var(--border-md)}
 textarea.form-input{resize:vertical;min-height:100px;line-height:1.7}
+select.form-input{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237A6A52' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center}
 .char-count{font-size:.82rem;color:var(--text-dim);text-align:right;margin-top:-.9rem;margin-bottom:1.2rem}
 .form-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
 .btn-wine{font-family:'Jost',sans-serif;font-size:.9rem;letter-spacing:.18em;text-transform:uppercase;padding:.78rem 2.2rem;background:var(--wine);border:none;color:var(--text);cursor:pointer;font-weight:400;transition:background .2s;border-radius:2px}
 .btn-wine:hover{background:var(--wine-lt)}
+.btn-wine:disabled{opacity:.4;cursor:not-allowed}
 .msg-sent-ok{font-size:.95rem;color:var(--gold-lt);font-style:italic;display:none}
 .mural-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.3rem;padding-bottom:.9rem;border-bottom:1px solid var(--border)}
 .mural-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--text)}
@@ -142,31 +135,39 @@ textarea.form-input{resize:vertical;min-height:100px;line-height:1.7}
 /* PHOTOS */
 .photo-bg{background:var(--bg2);border-top:1px solid var(--border)}
 .photo-sub{font-size:1rem;color:var(--text-dim);margin-top:-1.8rem;margin-bottom:2rem}
-.upload-zone{border:1px dashed var(--border-md);border-radius:3px;padding:2.2rem 2rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:2.5rem;position:relative}
+.upload-zone{border:1px dashed var(--border-md);border-radius:3px;padding:2.2rem 2rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:2rem;position:relative}
 .upload-zone:hover{border-color:var(--gold);background:rgba(192,154,80,.04)}
 .upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .upload-icon{font-size:2.2rem;margin-bottom:.8rem;display:block}
 .upload-text{font-size:1rem;color:var(--text-mid);margin-bottom:.3rem}
 .upload-hint{font-size:.85rem;color:var(--text-dim)}
-.photo-counter{font-size:.82rem;color:var(--gold);margin-top:.6rem;display:none}
-
-/* CAROUSEL */
+.photo-empty{text-align:center;font-size:1rem;color:var(--text-dim);font-style:italic;padding:2rem 0}
 .carousel-wrap{position:relative;margin-bottom:1rem}
 .carousel-track-outer{overflow:hidden;border-radius:3px}
 .carousel-track{display:flex;transition:transform .45s cubic-bezier(.25,.46,.45,.94)}
 .carousel-slide{flex:0 0 100%;position:relative;background:var(--surface)}
 .carousel-slide img{width:100%;height:clamp(240px,55vw,520px);object-fit:contain;display:block;background:var(--bg)}
 .carousel-caption{position:absolute;bottom:0;left:0;right:0;padding:.8rem 1.2rem;background:linear-gradient(transparent,rgba(0,0,0,.7));font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(242,234,216,.7);text-align:center}
-.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(11,8,6,.7);border:1px solid var(--border);color:var(--gold-lt);width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s;z-index:10;backdrop-filter:blur(6px)}
+.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(11,8,6,.7);border:1px solid var(--border);color:var(--gold-lt);width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:10;backdrop-filter:blur(6px)}
 .carousel-btn:hover{background:rgba(192,154,80,.15);border-color:var(--border-md)}
 .carousel-btn.prev{left:12px}
 .carousel-btn.next{right:12px}
 .carousel-btn:disabled{opacity:.25;cursor:not-allowed}
 .carousel-dots{display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap}
-.c-dot{width:7px;height:7px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);cursor:pointer;transition:background .2s,transform .2s}
-.c-dot.active{background:var(--gold);transform:scale(1.25)}
+.c-dot{width:7px;height:7px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);cursor:pointer;transition:all .2s}
+.c-dot.active{background:var(--gold);transform:scale(1.3)}
 .carousel-info{text-align:center;font-size:.85rem;color:var(--text-dim);margin-top:8px}
-.photo-empty{text-align:center;font-size:1rem;color:var(--text-dim);font-style:italic;padding:2.5rem 0}
+
+/* INTEREST */
+.interest-bg{background:var(--bg4);border-top:1px solid var(--border)}
+.interest-inner{max-width:640px;margin:0 auto}
+.interest-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:300;font-style:italic;color:var(--gold-lt);text-align:center;margin-bottom:.6rem;line-height:1.15}
+.interest-sub{text-align:center;font-size:1rem;color:var(--text-dim);margin-bottom:2.5rem;line-height:1.7}
+.interest-form{background:var(--surface);border:1px solid var(--border);padding:2rem}
+.interest-ok{background:var(--surface);border:1px solid var(--border-md);padding:2rem;text-align:center;display:none}
+.interest-ok-icon{font-size:2rem;margin-bottom:.8rem;display:block}
+.interest-ok-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-style:italic;color:var(--gold-lt);margin-bottom:.5rem}
+.interest-ok-msg{font-size:1rem;color:var(--text-mid)}
 
 /* FOOTER */
 footer{background:var(--bg);border-top:1px solid var(--border);text-align:center;padding:3rem 2rem}
@@ -184,16 +185,14 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
 @media(max-width:640px){
   .wine-grid{grid-template-columns:1fr}
   .v-grid{grid-template-columns:1fr}
-  .hero-stats{flex-direction:column;border:1px solid var(--border)}
-  .hero-stat{border-right:none;border-bottom:1px solid var(--border);padding:.7rem 1.5rem}
+  .hero-stats{flex-direction:column}
+  .hero-stat{border-right:none;border-bottom:1px solid var(--border)}
   .hero-stat:last-child{border-bottom:none}
   .sw{padding:3.5rem 1.2rem}
-  .filter-row{gap:.45rem}
   .filter-btn{font-size:.8rem;padding:.4rem .8rem}
   .card-row{grid-template-columns:72px 1fr}
-  .msg-form-box{padding:1.4rem}
+  .msg-form-box,.interest-form{padding:1.4rem}
   .vote-actions{flex-direction:column;align-items:flex-start}
-  .polaroid img{width:140px;height:140px}
   .sticky-nav{padding:.7rem 1rem;gap:.4rem}
   .nav-link{font-size:.78rem;padding:.38rem .75rem}
 }
@@ -207,24 +206,12 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
   <h1 class="hero-title">Os Melhores Vinhos<br>nos <em>Momentos</em><br>Mais Felizes</h1>
   <div class="hero-line"></div>
   <div class="hero-stats">
-    <div class="hero-stat">
-      <span class="stat-num">10</span>
-      <span class="stat-label">Rótulos</span>
-    </div>
-    <div class="hero-stat">
-      <span class="stat-num">7</span>
-      <span class="stat-label">Países</span>
-    </div>
-    <div class="hero-stat">
-      <span class="stat-num">1</span>
-      <span class="stat-label">Noite</span>
-    </div>
+    <div class="hero-stat"><span class="stat-num">10</span><span class="stat-label">Rótulos</span></div>
+    <div class="hero-stat"><span class="stat-num">7</span><span class="stat-label">Países</span></div>
+    <div class="hero-stat"><span class="stat-num">1</span><span class="stat-label">Noite</span></div>
   </div>
   <p class="hero-love">A celebração de um grande amor</p>
-  <div class="scroll-hint">
-    <span>Explorar</span>
-    <div class="scroll-arr"></div>
-  </div>
+  <div class="scroll-hint"><span>Explorar</span><div class="scroll-arr"></div></div>
 </section>
 
 <!-- NAV -->
@@ -232,7 +219,8 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
   <a class="nav-link" href="#vinhos">Os vinhos</a>
   <a class="nav-link" href="#votacao">Votação</a>
   <a class="nav-link" href="#mensagens">Mensagens</a>
-  <a class="nav-link gold" href="#fotos">Fotos da noite</a>
+  <a class="nav-link" href="#fotos">Fotos</a>
+  <a class="nav-link gold" href="#interesse">Quero saber mais</a>
 </nav>
 
 <!-- VINHOS -->
@@ -248,118 +236,97 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
     <button class="filter-btn" data-filter="tawny">Tawny</button>
     <button class="filter-btn" data-filter="sobremesa">Sobremesa</button>
   </div>
-  <div class="wine-grid" id="wineGrid">
-
+  <div class="wine-grid">
     <article class="wine-card reveal" data-type="branco" style="--card-accent:#8FC45A">
       <div class="card-top"><span class="card-flag">🇫🇷</span><span class="card-badge b-branco">Branco</span></div>
-      <h3 class="card-name">Chablis Denis Race</h3>
-      <p class="card-producer">Domaine Denis Race</p>
+      <h3 class="card-name">Chablis Denis Race</h3><p class="card-producer">Domaine Denis Race</p>
       <div class="card-divider"></div>
       <div class="card-row"><span class="row-label">Região</span><span class="row-value">Chablis, Borgonha — França</span></div>
       <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">100% Chardonnay</span></div>
       <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Domaine familiar, 4ª geração. 18 ha com videiras de 2 a 65 anos em solo Kimmeridgian.</span></div>
       <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Pêssego branco, flores, mineralidade marcante, acidez vibrante. 9–10 meses sobre borras finas em inox.</span></div>
     </article>
-
     <article class="wine-card reveal" data-type="rose" style="--card-accent:#E07AA0">
       <div class="card-top"><span class="card-flag">🇫🇷</span><span class="card-badge b-rose">Rosé</span></div>
-      <h3 class="card-name">Rosé de Provence Rollier</h3>
-      <p class="card-producer">Château La Martinette</p>
+      <h3 class="card-name">Rosé de Provence Rollier</h3><p class="card-producer">Château La Martinette</p>
       <div class="card-divider"></div>
       <div class="card-row"><span class="row-label">Região</span><span class="row-value">Côtes de Provence — França</span></div>
       <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Grenache, Tibouren, Cinsault, Syrah, Vermentino</span></div>
       <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Château La Martinette, Provence. Prensagem suave com descarte de 20% do suco de menor qualidade.</span></div>
       <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Morango, framboesa, melancia, toque cítrico. Fresco e equilibrado. Estágio em inox.</span></div>
     </article>
-
     <article class="wine-card reveal" data-type="tinto" style="--card-accent:#E07070">
       <div class="card-top"><span class="card-flag">🇮🇹</span><span class="card-badge b-tinto">Tinto</span></div>
-      <h3 class="card-name">Rosso di Toscana Cancellaia</h3>
-      <p class="card-producer">Pakravan-Papi</p>
+      <h3 class="card-name">Rosso di Toscana Cancellaia</h3><p class="card-producer">Pakravan-Papi</p>
       <div class="card-divider"></div>
       <div class="card-row"><span class="row-label">Região</span><span class="row-value">Riparbella, Toscana IGT — Itália</span></div>
       <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Cabernet Sauvignon (~70%) e Cabernet Franc (~30%)</span></div>
       <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Família Pakravan-Papi. 200m de altitude, solo vulcânico. Colheita manual em setembro.</span></div>
       <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Frutas pretas, azeitona, chocolate amargo, alecrim. Corpo cheio, taninos firmes e bem integrados.</span></div>
     </article>
-
     <article class="wine-card reveal" data-type="tinto" style="--card-accent:#E07070">
       <div class="card-top"><span class="card-flag">🇮🇹</span><span class="card-badge b-tinto">Tinto</span></div>
-      <h3 class="card-name">Brunello di Montalcino Collosorbo</h3>
-      <p class="card-producer">Tenuta di Collosorbo</p>
+      <h3 class="card-name">Brunello di Montalcino Collosorbo</h3><p class="card-producer">Tenuta di Collosorbo</p>
       <div class="card-divider"></div>
       <div class="card-row"><span class="row-label">Região</span><span class="row-value">Montalcino, Toscana DOCG — Itália</span></div>
       <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">100% Sangiovese (Brunello)</span></div>
       <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Família Ciacci desde 1850. 35 ha orgânicos ao sul de Montalcino, solo de argila vermelha e galestro.</span></div>
       <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Cereja silvestre, especiarias, toque balsâmico. Estruturado, taninos elegantes. 3 anos em carvalho.</span></div>
     </article>
-
     <article class="wine-card reveal" data-type="tinto" style="--card-accent:#E07070">
       <div class="card-top"><span class="card-flag">🇫🇷</span><span class="card-badge b-tinto">Tinto</span></div>
-      <h3 class="card-name">Fleur de Pédesclaux — Pauillac</h3>
-      <p class="card-producer">Château Pédesclaux</p>
+      <h3 class="card-name">Fleur de Pédesclaux — Pauillac</h3><p class="card-producer">Château Pédesclaux</p>
       <div class="card-divider"></div>
       <div class="card-row"><span class="row-label">Região</span><span class="row-value">Pauillac, Médoc, Bordeaux — França</span></div>
       <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Merlot (~50%), Cabernet Sauvignon (~48%), Petit Verdot</span></div>
       <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">2º vinho do Château Pédesclaux, 5º Grand Cru Classé de 1855. Família Lorenzetti. Orgânico desde 2019.</span></div>
       <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Amoras silvestres, cedro, cânfora. Delicado, taninos aveludados. 16 meses em barricas de carvalho.</span></div>
     </article>
-
     <article class="wine-card reveal" data-type="tinto" style="--card-accent:#E07070">
       <div class="card-top"><span class="card-flag">🇫🇷</span><span class="card-badge b-tinto">Tinto</span></div>
-      <h3 class="card-name">Saint-Émilion Grand Cru Tour de Laroque</h3>
-      <p class="card-producer">Château Laroque</p>
+      <h3 class="card-name">Saint-Émilion Grand Cru Tour de Laroque</h3><p class="card-producer">Château Laroque</p>
       <div class="card-divider"></div>
       <div class="card-row"><span class="row-label">Região</span><span class="row-value">Saint-Émilion Grand Cru, Bordeaux — França</span></div>
       <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Merlot (~94%) e Cabernet Franc</span></div>
       <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">2º vinho do Château Laroque (Fam. Beaumartin), maior propriedade de Saint-Émilion. Grand Cru Classé desde 1996.</span></div>
       <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Frutas vermelhas e pretas maduras, chocolate, especiarias. Elegante e sedoso. Vinhas com 50+ anos.</span></div>
     </article>
-
     <article class="wine-card reveal" data-type="tinto" style="--card-accent:#E07070">
       <div class="card-top"><span class="card-flag">🇺🇸</span><span class="card-badge b-tinto">Tinto</span></div>
-      <h3 class="card-name">Silverado Cabernet Franc</h3>
-      <p class="card-producer">Silverado Vineyards</p>
+      <h3 class="card-name">Silverado Cabernet Franc</h3><p class="card-producer">Silverado Vineyards</p>
       <div class="card-divider"></div>
       <div class="card-row"><span class="row-label">Região</span><span class="row-value">Napa Valley, Stags Leap District — Califórnia, EUA</span></div>
       <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Cabernet Franc</span></div>
       <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Silverado Vineyards, fundada em 1981. 100% estate grown, vinhedos pioneiros em Napa desde 1860.</span></div>
       <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Frutas vermelhas brilhantes, mineralidade, especiarias, toque herbal. Final longo e sedoso.</span></div>
     </article>
-
     <article class="wine-card reveal" data-type="tinto" style="--card-accent:#E07070">
       <div class="card-top"><span class="card-flag">🇿🇦</span><span class="card-badge b-tinto">Tinto</span></div>
-      <h3 class="card-name">Backsberg Pumphouse Syrah</h3>
-      <p class="card-producer">Backsberg Family Wines</p>
+      <h3 class="card-name">Backsberg Pumphouse Syrah</h3><p class="card-producer">Backsberg Family Wines</p>
       <div class="card-divider"></div>
       <div class="card-row"><span class="row-label">Região</span><span class="row-value">Paarl, Western Cape — África do Sul</span></div>
       <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">100% Syrah/Shiraz</span></div>
       <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Família Back. Certificada carbon neutral. Vinhedos de 20 anos nas encostas do Simonsberg.</span></div>
       <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Ameixa, cereja preta, alcaçuz, anis, baunilha. Aveludado e profundo. 12–18 meses em carvalho.</span></div>
     </article>
-
     <article class="wine-card reveal" data-type="tawny" style="--card-accent:#E0AA55">
       <div class="card-top"><span class="card-flag">🇵🇹</span><span class="card-badge b-tawny">Tawny</span></div>
-      <h3 class="card-name">Porto 10 Anos Decanter — Carvalhas</h3>
-      <p class="card-producer">Quinta das Carvalhas / Real Companhia Velha</p>
+      <h3 class="card-name">Porto 10 Anos Decanter — Carvalhas</h3><p class="card-producer">Quinta das Carvalhas / Real Companhia Velha</p>
       <div class="card-divider"></div>
       <div class="card-row"><span class="row-label">Região</span><span class="row-value">Vale do Douro, Cima Corgo — Portugal</span></div>
       <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Touriga Nacional, Touriga Franca, Tinta Roriz e outras castas durienses</span></div>
       <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Quinta das Carvalhas, propriedade da Real Companhia Velha (fund. 1756). Vinhas centenárias frente ao Pinhão.</span></div>
       <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Avelãs, figos, mel, caramelo, especiarias finas. Âmbar brilhante. Macio, sedoso. Envelhecimento médio de 10 anos.</span></div>
     </article>
-
     <article class="wine-card reveal" data-type="sobremesa" style="--card-accent:#9990E8">
       <div class="card-top"><span class="card-flag">🇭🇺</span><span class="card-badge b-sobremesa">Sobremesa</span></div>
-      <h3 class="card-name">Sauska Tokaji 5 Puttonyos</h3>
-      <p class="card-producer">Sauska Winery</p>
+      <h3 class="card-name">Sauska Tokaji 5 Puttonyos</h3><p class="card-producer">Sauska Winery</p>
       <div class="card-divider"></div>
       <div class="card-row"><span class="row-label">Região</span><span class="row-value">Tokaj-Hegyalja — Hungria</span></div>
       <div class="card-row"><span class="row-label">Uvas</span><span class="row-value">Furmint e Hárslevelű (podridão nobre)</span></div>
       <div class="card-row"><span class="row-label">Produtor</span><span class="row-value">Família Sauska, winery em Mád. Tokaj é patrimônio da UNESCO, produz vinhos doces desde o séc. XVII.</span></div>
       <div class="card-row"><span class="row-label">Perfil</span><span class="row-value perfil">Damasco seco, laranja cristalizada, mel, gengibre, abacaxi. Doce com acidez cortante. 20 meses em carvalho.</span></div>
     </article>
-
   </div>
 </div>
 </section>
@@ -398,7 +365,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
     <div class="char-count"><span id="charCount">0</span> / 400</div>
     <div class="form-footer">
       <span class="msg-sent-ok" id="msgOk">Mensagem enviada com carinho!</span>
-      <button class="btn-wine" onclick="sendMsg()">Enviar mensagem</button>
+      <button class="btn-wine" id="msgBtn" onclick="sendMsg()">Enviar mensagem</button>
     </div>
   </div>
   <div class="mural-header">
@@ -414,13 +381,12 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
 <div class="sw">
   <span class="section-label">Memórias da noite</span>
   <h2 class="section-title">Fotos com os vinhos</h2>
-  <p class="photo-sub">Compartilhe o momento. Faça upload das suas fotos da noite.</p>
-  <div class="upload-zone" id="uploadZone">
+  <p class="photo-sub">Compartilhe o momento — as fotos aparecem para todos os convidados em tempo real.</p>
+  <div class="upload-zone">
     <input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotos(this.files)">
     <span class="upload-icon">📷</span>
     <p class="upload-text">Toque aqui para adicionar fotos</p>
     <p class="upload-hint">JPG, PNG — múltiplas fotos aceitas</p>
-    <p class="photo-counter" id="photoCounter"></p>
   </div>
   <p class="photo-empty" id="photoEmpty">Ainda não há fotos. Seja o primeiro a compartilhar!</p>
   <div class="carousel-wrap" id="carouselWrap" style="display:none">
@@ -435,14 +401,73 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
 </div>
 </section>
 
+<!-- INTERESSE -->
+<section id="interesse" class="interest-bg">
+<div class="sw">
+<div class="interest-inner">
+  <span class="section-label" style="text-align:center;display:block">Quer saber mais?</span>
+  <h2 class="interest-title">Amou um vinho?<br>Nos fale qual!</h2>
+  <p class="interest-sub">Deixe seu e-mail e escolha o vinho que te conquistou.<br>Entraremos em contato com mais informações.</p>
+
+  <div class="interest-form" id="interestForm">
+    <label class="form-label">Seu e-mail</label>
+    <input class="form-input" id="intEmail" type="email" placeholder="seu@email.com" maxlength="100">
+    <label class="form-label">Qual vinho te conquistou?</label>
+    <select class="form-input" id="intWine">
+      <option value="">— Selecione o vinho —</option>
+      <option>Chablis Denis Race</option>
+      <option>Rosé de Provence Rollier</option>
+      <option>Rosso di Toscana Cancellaia</option>
+      <option>Brunello di Montalcino Collosorbo</option>
+      <option>Fleur de Pédesclaux — Pauillac</option>
+      <option>Saint-Émilion Grand Cru Tour de Laroque</option>
+      <option>Silverado Cabernet Franc</option>
+      <option>Backsberg Pumphouse Syrah</option>
+      <option>Porto 10 Anos Decanter — Carvalhas</option>
+      <option>Sauska Tokaji 5 Puttonyos</option>
+    </select>
+    <div class="form-footer" style="justify-content:flex-end">
+      <button class="btn-gold" id="intBtn" onclick="sendInterest()">Enviar</button>
+    </div>
+  </div>
+
+  <div class="interest-ok" id="interestOk">
+    <span class="interest-ok-icon">🍷</span>
+    <p class="interest-ok-title">Tá tudo certo!</p>
+    <p class="interest-ok-msg">Aproveite a festa — em breve entraremos em contato sobre o vinho escolhido.</p>
+  </div>
+</div>
+</div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-line"></div>
-  <p class="footer-text">Os melhores vinhos nos momentos mais felizes</p>
+  <p class="footer-text">Os melhores vinhos nos momentos mais felizes · Isa & Ricky</p>
 </footer>
 
-<script>
-/* FILTER */
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment,
+         collection, addDoc, onSnapshot, orderBy, query, serverTimestamp,
+         updateDoc as fsUpdate }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL, listAll }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+/* ── Init ── */
+const app = initializeApp({
+  apiKey: "AIzaSyB7Qmtzi02k-MDdPqBlWWt1i9agmj6jJ6Q",
+  authDomain: "isa-e-ricky.firebaseapp.com",
+  projectId: "isa-e-ricky",
+  storageBucket: "isa-e-ricky.firebasestorage.app",
+  messagingSenderId: "451609971339",
+  appId: "1:451609971339:web:53dd984db5e1728c9ee28e"
+});
+const db  = getFirestore(app);
+const st  = getStorage(app);
+
+/* ── FILTER ── */
 document.querySelectorAll('.filter-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
@@ -454,37 +479,34 @@ document.querySelectorAll('.filter-btn').forEach(btn=>{
   });
 });
 
-/* REVEAL */
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
-},{threshold:.1});
+/* ── REVEAL ── */
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-/* VOTING */
+/* ── WINES list ── */
 const WINES=[
-  {id:'chablis',   name:'Chablis Denis Race',                      badge:'b-branco',   label:'Branco'},
-  {id:'rose',      name:'Rosé de Provence Rollier',                badge:'b-rose',     label:'Rosé'},
-  {id:'cancellaia',name:'Rosso di Toscana Cancellaia',             badge:'b-tinto',    label:'Tinto'},
-  {id:'collosorbo',name:'Brunello di Montalcino Collosorbo',       badge:'b-tinto',    label:'Tinto'},
-  {id:'pedesclaux',name:'Fleur de Pédesclaux — Pauillac',          badge:'b-tinto',    label:'Tinto'},
-  {id:'laroque',   name:'Saint-Émilion Grand Cru Tour de Laroque', badge:'b-tinto',    label:'Tinto'},
-  {id:'silverado', name:'Silverado Cabernet Franc',                badge:'b-tinto',    label:'Tinto'},
-  {id:'backsberg', name:'Backsberg Pumphouse Syrah',               badge:'b-tinto',    label:'Tinto'},
-  {id:'carvalhas', name:'Porto 10 Anos — Carvalhas',               badge:'b-tawny',    label:'Tawny'},
-  {id:'sauska',    name:'Sauska Tokaji 5 Puttonyos',               badge:'b-sobremesa',label:'Sobremesa'},
+  {id:'chablis',   name:'Chablis Denis Race',                      badge:'b-branco',    label:'Branco'},
+  {id:'rose',      name:'Rosé de Provence Rollier',                badge:'b-rose',      label:'Rosé'},
+  {id:'cancellaia',name:'Rosso di Toscana Cancellaia',             badge:'b-tinto',     label:'Tinto'},
+  {id:'collosorbo',name:'Brunello di Montalcino Collosorbo',       badge:'b-tinto',     label:'Tinto'},
+  {id:'pedesclaux',name:'Fleur de Pédesclaux — Pauillac',          badge:'b-tinto',     label:'Tinto'},
+  {id:'laroque',   name:'Saint-Émilion Grand Cru Tour de Laroque', badge:'b-tinto',     label:'Tinto'},
+  {id:'silverado', name:'Silverado Cabernet Franc',                badge:'b-tinto',     label:'Tinto'},
+  {id:'backsberg', name:'Backsberg Pumphouse Syrah',               badge:'b-tinto',     label:'Tinto'},
+  {id:'carvalhas', name:'Porto 10 Anos — Carvalhas',               badge:'b-tawny',     label:'Tawny'},
+  {id:'sauska',    name:'Sauska Tokaji 5 Puttonyos',               badge:'b-sobremesa', label:'Sobremesa'},
 ];
 
+/* ── VOTE CARDS ── */
 const MAX=3;
-let selected=new Set(),voted=false,votes={},messages=[];
+let selected=new Set(),voted=false,votes={};
 WINES.forEach(w=>votes[w.id]=0);
-
 const vGrid=document.getElementById('vGrid');
 WINES.forEach(w=>{
   const el=document.createElement('div');
   el.className='v-card';el.dataset.id=w.id;
   el.innerHTML=`<div class="v-chk"><svg viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#0B0806" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  <span class="v-badge ${w.badge}">${w.label}</span>
-  <div class="v-name">${w.name}</div>`;
+  <span class="v-badge ${w.badge}">${w.label}</span><div class="v-name">${w.name}</div>`;
   el.addEventListener('click',()=>toggleWine(w.id,el));
   vGrid.appendChild(el);
 });
@@ -499,171 +521,159 @@ function toggleWine(id,el){
   document.querySelectorAll('.v-card:not(.selected)').forEach(c=>c.classList.toggle('disabled',n>=MAX));
 }
 
-async function submitVote(){
+window.submitVote=async function(){
   if(voted||selected.size===0)return;
   voted=true;
   document.getElementById('voteBtn').disabled=true;
-  selected.forEach(id=>{votes[id]=(votes[id]||0)+1;});
-  try{await window.storage.set('wine_votes_v3',JSON.stringify(votes),true);}catch(e){}
+  const vRef=doc(db,'eventos','isa-e-ricky','votacao','resultado');
+  const upd={};selected.forEach(id=>{upd[id]=increment(1);});
+  try{
+    const snap=await getDoc(vRef);
+    if(snap.exists()){await updateDoc(vRef,upd);}
+    else{await setDoc(vRef,Object.fromEntries(WINES.map(w=>[w.id,0])));await updateDoc(vRef,upd);}
+  }catch(e){console.error(e);}
   document.querySelectorAll('.v-card').forEach(c=>{c.classList.add('disabled');c.style.cursor='default';});
   document.getElementById('vOk').style.display='block';
+};
+
+const voteRef=doc(db,'eventos','isa-e-ricky','votacao','resultado');
+onSnapshot(voteRef,snap=>{
+  if(snap.exists())votes={...Object.fromEntries(WINES.map(w=>[w.id,0])),...snap.data()};
   renderResults();
-}
+});
 
 function renderResults(){
   const total=Object.values(votes).reduce((a,b)=>a+b,0);
   const max=Math.max(...Object.values(votes),1);
   const sorted=[...WINES].sort((a,b)=>(votes[b.id]||0)-(votes[a.id]||0));
   document.getElementById('resArea').innerHTML=sorted.map((w,i)=>{
-    const v=votes[w.id]||0,pct=total>0?Math.round(v/total*100):0,barW=Math.round(v/max*100),isGold=i===0&&v>0;
-    return `<div class="rrow"><div class="rname"><span>${isGold?'★ ':''}${w.name}</span><span class="rcount">${v} voto${v!==1?'s':''} · ${pct}%</span></div>
-    <div class="bar-bg"><div class="bar${isGold?' gold':''}" style="width:${barW}%"></div></div></div>`;
+    const v=votes[w.id]||0,pct=total>0?Math.round(v/total*100):0,bw=Math.round(v/max*100),g=i===0&&v>0;
+    return `<div class="rrow"><div class="rname"><span>${g?'★ ':''}${w.name}</span><span class="rcount">${v} voto${v!==1?'s':''} · ${pct}%</span></div>
+    <div class="bar-bg"><div class="bar${g?' gold':''}" style="width:${bw}%"></div></div></div>`;
   }).join('');
   document.getElementById('totalLabel').textContent=`${total} voto${total!==1?'s':''} registrado${total!==1?'s':''}`;
 }
 
-/* MESSAGES */
-function updateChar(){document.getElementById('charCount').textContent=document.getElementById('msgText').value.length}
+/* ── MESSAGES ── */
+window.updateChar=function(){document.getElementById('charCount').textContent=document.getElementById('msgText').value.length};
 function timeAgo(ts){
-  const d=Math.floor((Date.now()-ts)/1000);
+  if(!ts)return'agora mesmo';
+  const d=Math.floor((Date.now()-ts.toMillis())/1000);
   if(d<60)return'agora mesmo';if(d<3600)return`há ${Math.floor(d/60)} min`;
   if(d<86400)return`há ${Math.floor(d/3600)}h`;return`há ${Math.floor(d/86400)}d`;
 }
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+const msgsCol=collection(db,'eventos','isa-e-ricky','mensagens');
 
-async function sendMsg(){
+window.sendMsg=async function(){
   const name=document.getElementById('msgName').value.trim();
   const text=document.getElementById('msgText').value.trim();
   if(!name||!text)return;
-  messages.unshift({id:Date.now(),name,text,ts:Date.now(),likes:0});
-  try{await window.storage.set('wedding_msgs_v3',JSON.stringify(messages),true);}catch(e){}
-  document.getElementById('msgName').value='';
-  document.getElementById('msgText').value='';
-  document.getElementById('charCount').textContent='0';
-  const ok=document.getElementById('msgOk');ok.style.display='inline';
-  setTimeout(()=>ok.style.display='none',3000);
-  renderMural();
-}
+  const btn=document.getElementById('msgBtn');btn.disabled=true;
+  try{
+    await addDoc(msgsCol,{name,text,ts:serverTimestamp(),likes:0});
+    document.getElementById('msgName').value='';
+    document.getElementById('msgText').value='';
+    document.getElementById('charCount').textContent='0';
+    const ok=document.getElementById('msgOk');ok.style.display='inline';
+    setTimeout(()=>ok.style.display='none',3000);
+  }catch(e){console.error(e);}
+  btn.disabled=false;
+};
 
-async function likeMsg(id){
-  const m=messages.find(m=>m.id===id);if(!m)return;
-  m.likes=(m.likes||0)+1;
-  try{await window.storage.set('wedding_msgs_v3',JSON.stringify(messages),true);}catch(e){}
-  renderMural();
-}
+window.likeMsg=async function(id){
+  try{await fsUpdate(doc(db,'eventos','isa-e-ricky','mensagens',id),{likes:increment(1)});}catch(e){}
+};
 
-function renderMural(){
+onSnapshot(query(msgsCol,orderBy('ts','desc')),snap=>{
   const area=document.getElementById('muralArea');
-  document.getElementById('muralCount').textContent=`${messages.length} mensage${messages.length!==1?'ns':'m'}`;
-  if(messages.length===0){area.innerHTML='<p class="mural-empty">Ainda não há mensagens. Seja o primeiro a escrever!</p>';return;}
-  area.innerHTML=messages.map(m=>`
-    <div class="msg-card">
+  document.getElementById('muralCount').textContent=`${snap.size} mensage${snap.size!==1?'ns':'m'}`;
+  if(snap.empty){area.innerHTML='<p class="mural-empty">Ainda não há mensagens. Seja o primeiro a escrever!</p>';return;}
+  area.innerHTML=snap.docs.map(d=>{
+    const m={...d.data(),id:d.id};
+    return `<div class="msg-card">
       <div class="msg-top"><span class="msg-author">${esc(m.name)}</span><span class="msg-time">${timeAgo(m.ts)}</span></div>
       <p class="msg-text">${esc(m.text)}</p>
-      <button class="like-btn${m.likes>0?' liked':''}" onclick="likeMsg(${m.id})">♡ ${m.likes>0?m.likes:''}</button>
-    </div>`).join('');
+      <button class="like-btn${m.likes>0?' liked':''}" onclick="likeMsg('${m.id}')">♡ ${m.likes>0?m.likes:''}</button>
+    </div>`;
+  }).join('');
+});
+
+/* ── PHOTOS (Firebase Storage) ── */
+let photoUrls=[], carouselIndex=0;
+const fotosRef=ref(st,'fotos');
+
+async function loadPhotos(){
+  try{
+    const res=await listAll(fotosRef);
+    photoUrls=await Promise.all(res.items.map(item=>getDownloadURL(item)));
+    renderCarousel();
+  }catch(e){console.error(e);}
 }
 
-/* PHOTOS + CAROUSEL */
-let photos=[];
-let carouselIndex=0;
-
-function handlePhotos(files){
-  Array.from(files).forEach(file=>{
-    if(!file.type.startsWith('image/'))return;
-    const reader=new FileReader();
-    reader.onload=e=>{
-      photos.push({src:e.target.result,ts:Date.now()});
+window.handlePhotos=async function(files){
+  const input=document.getElementById('photoInput');
+  const uploadText=document.querySelector('.upload-text');
+  uploadText.textContent='Enviando...';
+  for(const file of Array.from(files)){
+    if(!file.type.startsWith('image/'))continue;
+    const fileRef=ref(st,`fotos/${Date.now()}_${file.name}`);
+    try{
+      await uploadBytes(fileRef,file);
+      const url=await getDownloadURL(fileRef);
+      photoUrls.push(url);
       renderCarousel();
-    };
-    reader.readAsDataURL(file);
-  });
-  // reset input so same files can be added again
-  document.getElementById('photoInput').value='';
-}
+    }catch(e){console.error(e);}
+  }
+  uploadText.textContent='Adicionar mais fotos';
+  input.value='';
+};
 
 function renderCarousel(){
   const empty=document.getElementById('photoEmpty');
   const wrap=document.getElementById('carouselWrap');
-  const counter=document.getElementById('photoCounter');
-
-  if(photos.length===0){
-    empty.style.display='block';
-    wrap.style.display='none';
-    counter.style.display='none';
-    return;
-  }
-
-  empty.style.display='none';
-  wrap.style.display='block';
-  counter.style.display='block';
-  counter.textContent=`${photos.length} foto${photos.length!==1?'s':''} adicionada${photos.length!==1?'s':''}`;
-
-  // clamp index
-  if(carouselIndex>=photos.length)carouselIndex=photos.length-1;
+  if(photoUrls.length===0){empty.style.display='block';wrap.style.display='none';return;}
+  empty.style.display='none';wrap.style.display='block';
+  if(carouselIndex>=photoUrls.length)carouselIndex=photoUrls.length-1;
   if(carouselIndex<0)carouselIndex=0;
-
-  // slides
   const track=document.getElementById('carouselTrack');
-  track.innerHTML=photos.map((p,i)=>`
+  track.innerHTML=photoUrls.map((url,i)=>`
     <div class="carousel-slide">
-      <img src="${p.src}" alt="Foto ${i+1}" loading="lazy">
-      <div class="carousel-caption">✦ uma noite inesquecível · foto ${i+1} de ${photos.length}</div>
+      <img src="${url}" alt="Foto ${i+1}" loading="lazy">
+      <div class="carousel-caption">✦ uma noite inesquecível · ${i+1} de ${photoUrls.length}</div>
     </div>`).join('');
   track.style.transform=`translateX(-${carouselIndex*100}%)`;
-
-  // dots
-  const dots=document.getElementById('carouselDots');
-  dots.innerHTML=photos.map((_,i)=>`<div class="c-dot${i===carouselIndex?' active':''}" onclick="goToSlide(${i})"></div>`).join('');
-
-  // buttons
+  document.getElementById('carouselDots').innerHTML=photoUrls.map((_,i)=>`<div class="c-dot${i===carouselIndex?' active':''}" onclick="goToSlide(${i})"></div>`).join('');
   document.getElementById('btnPrev').disabled=carouselIndex===0;
-  document.getElementById('btnNext').disabled=carouselIndex===photos.length-1;
-  document.getElementById('carouselInfo').textContent=`${carouselIndex+1} / ${photos.length}`;
+  document.getElementById('btnNext').disabled=carouselIndex===photoUrls.length-1;
+  document.getElementById('carouselInfo').textContent=`${carouselIndex+1} / ${photoUrls.length}`;
 }
 
-function moveCarousel(dir){
-  carouselIndex=Math.max(0,Math.min(photos.length-1,carouselIndex+dir));
-  renderCarousel();
-}
+window.moveCarousel=function(dir){carouselIndex=Math.max(0,Math.min(photoUrls.length-1,carouselIndex+dir));renderCarousel();};
+window.goToSlide=function(i){carouselIndex=i;renderCarousel();};
 
-function goToSlide(i){
-  carouselIndex=i;
-  renderCarousel();
-}
-
-// touch/swipe support
+// swipe
 (function(){
-  let startX=0;
-  document.addEventListener('touchstart',e=>{
-    const t=e.target.closest('#carouselWrap');
-    if(t)startX=e.touches[0].clientX;
-  },{passive:true});
-  document.addEventListener('touchend',e=>{
-    const t=e.target.closest('#carouselWrap');
-    if(!t||!startX)return;
-    const dx=startX-e.changedTouches[0].clientX;
-    if(Math.abs(dx)>40){moveCarousel(dx>0?1:-1);}
-    startX=0;
-  },{passive:true});
+  let sx=0;
+  document.addEventListener('touchstart',e=>{const t=e.target.closest('#carouselWrap');if(t)sx=e.touches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',e=>{const t=e.target.closest('#carouselWrap');if(!t||!sx)return;const dx=sx-e.changedTouches[0].clientX;if(Math.abs(dx)>40)window.moveCarousel(dx>0?1:-1);sx=0;},{passive:true});
+  document.addEventListener('keydown',e=>{if(document.getElementById('carouselWrap').style.display==='none')return;if(e.key==='ArrowLeft')window.moveCarousel(-1);if(e.key==='ArrowRight')window.moveCarousel(1);});
+})();
 
-  // keyboard arrows
-  document.addEventListener('keydown',e=>{
-    if(document.getElementById('carouselWrap').style.display==='none')return;
-    if(e.key==='ArrowLeft')moveCarousel(-1);
-    if(e.key==='ArrowRight')moveCarousel(1);
-  });
-})()
+/* ── INTERESSE ── */
+window.sendInterest=async function(){
+  const email=document.getElementById('intEmail').value.trim();
+  const wine=document.getElementById('intWine').value;
+  if(!email||!wine){return;}
+  const btn=document.getElementById('intBtn');btn.disabled=true;
+  try{
+    await addDoc(collection(db,'eventos','isa-e-ricky','interesse'),{email,wine,ts:serverTimestamp()});
+    document.getElementById('interestForm').style.display='none';
+    document.getElementById('interestOk').style.display='block';
+  }catch(e){console.error(e);btn.disabled=false;}
+};
 
-/* LOAD */
-async function loadAll(){
-  try{const r=await window.storage.get('wine_votes_v3',true);if(r&&r.value)votes=JSON.parse(r.value);}catch(e){}
-  try{const r=await window.storage.get('wedding_msgs_v3',true);if(r&&r.value)messages=JSON.parse(r.value);}catch(e){}
-  renderResults();
-  renderMural();
-  renderCarousel();
-}
-loadAll();
+loadPhotos();
 </script>
 </body>
 </html>
