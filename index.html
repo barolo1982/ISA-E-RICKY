@@ -119,23 +119,25 @@ select.form-input{cursor:pointer;appearance:none;background-image:url("data:imag
 .btn-wine:disabled{opacity:.4;cursor:not-allowed}
 .msg-sent-ok{font-size:.95rem;color:var(--gold-lt);font-style:italic;display:none}
 
-/* MURAL ANIMADO */
-.mural-stage{width:100%;margin-top:1.5rem}
-.mural-feed{display:flex;flex-direction:column;gap:10px}
-.mural-count{font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-top:1rem;text-align:center}
+/* MESSAGE CAROUSEL */
+.msg-carousel-wrap{position:relative;margin-top:1.5rem}
+.msg-carousel-outer{overflow:hidden;border-radius:3px}
+.msg-carousel-track{display:flex;transition:transform .45s cubic-bezier(.25,.46,.45,.94)}
+.msg-slide{flex:0 0 100%;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);padding:2rem 2.2rem;min-height:160px;display:flex;flex-direction:column;justify-content:center}
+.msg-slide-author{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:var(--gold-lt);margin-bottom:.6rem}
+.msg-slide-text{font-size:1.05rem;color:var(--text-mid);line-height:1.75}
+.msg-slide-time{font-size:.78rem;color:var(--text-dim);margin-top:.8rem;letter-spacing:.08em}
+.msg-carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(11,8,6,.8);border:1px solid var(--border);color:var(--gold-lt);width:42px;height:42px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:10;backdrop-filter:blur(6px)}
+.msg-carousel-btn:hover{background:rgba(192,154,80,.18);border-color:var(--border-md)}
+.msg-carousel-btn.prev{left:-16px}
+.msg-carousel-btn.next{right:-16px}
+.msg-carousel-btn:disabled{opacity:.22;cursor:not-allowed}
+.msg-carousel-dots{display:flex;gap:6px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.msg-dot{width:6px;height:6px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);cursor:pointer;transition:all .2s}
+.msg-dot.active{background:var(--gold);transform:scale(1.3)}
+.msg-carousel-info{text-align:center;font-size:.82rem;color:var(--text-dim);margin-top:6px}
 .mural-empty{text-align:center;font-size:1rem;color:var(--text-dim);font-style:italic;padding:3rem 0}
-.msg-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);padding:1.4rem 1.7rem;position:relative;
-  opacity:0;transform:translateX(-24px);
-  animation:slideIn .5s cubic-bezier(.25,.46,.45,.94) forwards}
-@keyframes slideIn{
-  to{opacity:1;transform:translateX(0)}
-}
-.msg-card:hover{border-color:var(--border-md)}
-.msg-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.5rem;flex-wrap:wrap;gap:.4rem}
-.msg-author{font-weight:500;font-size:1.05rem;color:var(--gold-lt)}
-.msg-time{font-size:.82rem;color:var(--text-dim)}
-.msg-text{font-size:1.05rem;color:var(--text-mid);line-height:1.75}
-.msg-new-badge{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);background:rgba(192,154,80,.12);border:1px solid var(--border);padding:2px 7px;border-radius:2px;margin-left:6px;vertical-align:middle}
+.mural-count{font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-top:.6rem;text-align:center}
 
 /* INTEREST */
 .interest-bg{background:var(--bg4);border-top:1px solid var(--border)}
@@ -346,9 +348,15 @@ footer{background:var(--bg);border-top:1px solid var(--border);text-align:center
       <button class="btn-wine" id="msgBtn" onclick="sendMsg()">Enviar mensagem</button>
     </div>
   </div>
-  <div class="mural-stage">
-    <div class="mural-feed" id="muralFeed"></div>
-    <p class="mural-empty" id="muralEmpty" style="display:none">Ainda não há mensagens. Seja o primeiro a escrever!</p>
+  <p class="mural-empty" id="muralEmpty">Ainda não há mensagens. Seja o primeiro a escrever!</p>
+  <div class="msg-carousel-wrap" id="msgCarouselWrap" style="display:none">
+    <div class="msg-carousel-outer">
+      <div class="msg-carousel-track" id="msgTrack"></div>
+    </div>
+    <button class="msg-carousel-btn prev" id="msgPrev" onclick="moveMsg(-1)">&#8592;</button>
+    <button class="msg-carousel-btn next" id="msgNext" onclick="moveMsg(1)">&#8594;</button>
+    <div class="msg-carousel-dots" id="msgDots"></div>
+    <p class="msg-carousel-info" id="msgInfo"></p>
   </div>
   <p class="mural-count" id="muralCount"></p>
 </div>
@@ -528,45 +536,58 @@ function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g
 
 const msgsCol=collection(db,'eventos','isa-e-ricky','mensagens');
 
-let knownMsgIds = new Set();
+let msgIndex = 0;
+let msgList = [];
+
+function renderMsgCarousel(){
+  const wrap = document.getElementById('msgCarouselWrap');
+  const empty = document.getElementById('muralEmpty');
+  const countEl = document.getElementById('muralCount');
+
+  if(msgList.length === 0){
+    empty.style.display = 'block';
+    wrap.style.display = 'none';
+    countEl.textContent = '';
+    return;
+  }
+  empty.style.display = 'none';
+  wrap.style.display = 'block';
+  countEl.textContent = `${msgList.length} mensage${msgList.length!==1?'ns':'m'}`;
+
+  if(msgIndex >= msgList.length) msgIndex = 0;
+
+  document.getElementById('msgTrack').innerHTML = msgList.map(m=>`
+    <div class="msg-slide">
+      <div class="msg-slide-author">${esc(m.name)}</div>
+      <div class="msg-slide-text">${esc(m.text)}</div>
+      <div class="msg-slide-time">${timeAgo(m.ts)}</div>
+    </div>`).join('');
+
+  document.getElementById('msgTrack').style.transform = `translateX(-${msgIndex*100}%)`;
+  document.getElementById('msgDots').innerHTML = msgList.map((_,i)=>`<div class="msg-dot${i===msgIndex?' active':''}" onclick="goMsg(${i})"></div>`).join('');
+  document.getElementById('msgPrev').disabled = msgIndex === 0;
+  document.getElementById('msgNext').disabled = msgIndex === msgList.length-1;
+  document.getElementById('msgInfo').textContent = `${msgIndex+1} / ${msgList.length}`;
+}
+
+window.moveMsg = function(dir){
+  msgIndex = Math.max(0, Math.min(msgList.length-1, msgIndex+dir));
+  renderMsgCarousel();
+};
+window.goMsg = function(i){ msgIndex=i; renderMsgCarousel(); };
+
+// swipe no carrossel de mensagens
+(function(){
+  let sx=0;
+  document.addEventListener('touchstart',e=>{const t=e.target.closest('#msgCarouselWrap');if(t)sx=e.touches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',e=>{const t=e.target.closest('#msgCarouselWrap');if(!t||!sx)return;const dx=sx-e.changedTouches[0].clientX;if(Math.abs(dx)>40)window.moveMsg(dx>0?1:-1);sx=0;},{passive:true});
+})();
 
 async function loadMessages(){
   try{
     const snap = await getDocs(query(msgsCol, orderBy('ts','desc')));
-    const count = snap.size;
-    const countEl = document.getElementById('muralCount');
-    const emptyEl = document.getElementById('muralEmpty');
-    const feed = document.getElementById('muralFeed');
-
-    countEl.textContent = count > 0 ? `${count} mensage${count!==1?'ns':'m'}` : '';
-
-    if(snap.empty){
-      emptyEl.style.display = 'block';
-      feed.innerHTML = '';
-      knownMsgIds.clear();
-      return;
-    }
-    emptyEl.style.display = 'none';
-
-    // Detecta mensagens novas para animar
-    const newIds = new Set(snap.docs.map(d=>d.id));
-    const hasNew = snap.docs.some(d=>!knownMsgIds.has(d.id));
-    knownMsgIds = newIds;
-
-    // Reconstrói o feed com animação escalonada
-    feed.innerHTML = snap.docs.map((d, i) => {
-      const m = {...d.data(), id: d.id};
-      const isNew = hasNew && i === 0;
-      const delay = i * 80;
-      return `<div class="msg-card" style="animation-delay:${delay}ms">
-        <div class="msg-top">
-          <span class="msg-author">${esc(m.name)}${isNew ? '<span class="msg-new-badge">novo</span>' : ''}</span>
-          <span class="msg-time">${timeAgo(m.ts)}</span>
-        </div>
-        <p class="msg-text">${esc(m.text)}</p>
-      </div>`;
-    }).join('');
-
+    msgList = snap.docs.map(d=>({...d.data(),id:d.id}));
+    renderMsgCarousel();
   }catch(e){console.error('Erro mensagens:',e);}
 }
 
